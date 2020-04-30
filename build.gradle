@@ -2,6 +2,7 @@ plugins {
 	id 'org.springframework.boot' version '2.2.6.RELEASE'
 	id 'io.spring.dependency-management' version '1.0.9.RELEASE'
 	id 'java'
+	id 'jacoco'
 }
 
 group = 'com.peachbros'
@@ -21,6 +22,51 @@ dependencies {
 	}
 }
 
+jacoco {
+	toolVersion = "0.8.5"
+}
+
 test {
 	useJUnitPlatform()
+
+	finalizedBy 'jacocoTestReport'
+}
+
+jacocoTestReport {
+	reports {
+		html.enabled true
+		xml.enabled false
+		csv.enabled false
+	}
+
+	finalizedBy 'jacocoTestCoverageVerification'
+}
+
+
+jacocoTestCoverageVerification {
+	violationRules {
+		rule {
+			element = 'CLASS'
+
+			limit {
+				counter = 'INSTRUCTION'
+				value = 'COVEREDRATIO'
+				minimum = 0.70
+			}
+
+			includes = ['*.domain.*']
+
+		}
+
+		rule {
+			element = 'METHOD'
+
+			limit {
+				counter = 'LINE'
+				value = 'TOTALCOUNT'
+				maximum = 22
+			}
+		}
+
+	}
 }
