@@ -55,7 +55,6 @@ jacocoTestCoverageVerification {
 			}
 
 			includes = ['*.domain.*']
-
 		}
 
 		rule {
@@ -66,6 +65,8 @@ jacocoTestCoverageVerification {
 				value = 'TOTALCOUNT'
 				maximum = 22
 			}
+
+			includes = ['*.domain.*']
 		}
 
 	}
