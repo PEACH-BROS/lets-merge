@@ -13,7 +13,7 @@ public class MissionManager {
     public static boolean apply(Mission mission, User user) {
         List<User> users = applicants.computeIfAbsent(mission, key -> new ArrayList<>());
 
-        if(users.contains(user)) {
+        if (users.contains(user)) {
             return false;
         }
 

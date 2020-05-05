@@ -5,7 +5,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 class MissionManagerTest {
 
@@ -13,7 +12,7 @@ class MissionManagerTest {
     @Test
     void applySuccess() {
         User user = new User("이름", "이메일주소");
-        Mission mission = new Mission("미션제목");
+        Mission mission = new Mission("미션제목", "2020-05-05 15:49");
 
         assertThat(MissionManager.apply(mission, user)).isTrue();
     }
@@ -22,7 +21,7 @@ class MissionManagerTest {
     @Test
     void applyFail() {
         User user = new User("이름", "이메일주소");
-        Mission mission = new Mission("미션제목");
+        Mission mission = new Mission("미션제목", "2020-05-05 15:49");
 
         MissionManager.apply(mission, user);
 
