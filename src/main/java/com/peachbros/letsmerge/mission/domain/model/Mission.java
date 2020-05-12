@@ -24,4 +24,8 @@ public class Mission {
     public boolean isActive(LocalDateTime now) {
         return startDateTime.isBefore(now) && dueDateTime.isAfter(now);
     }
+
+    public boolean isNotActive(LocalDateTime now) {
+        return !isActive(now);
+    }
 }

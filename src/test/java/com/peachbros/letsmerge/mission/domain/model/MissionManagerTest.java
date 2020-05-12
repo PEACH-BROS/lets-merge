@@ -12,19 +12,28 @@ class MissionManagerTest {
     @Test
     void applySuccess() {
         User user = new User("이름", "이메일주소");
-        Mission mission = new Mission("미션제목", "2020-05-05 15:49");
+        Mission mission = new Mission("미션제목", "2021-05-05 15:48", "2021-05-05 15:50");
 
-        assertThat(MissionManager.apply(mission, user)).isTrue();
+        assertThat(MissionManager.apply(mission, user, "2021-05-05 15:49")).isTrue();
     }
 
-    @DisplayName("미션 신청 실패")
+    @DisplayName("미션 신청 실패 : 중복 신청")
     @Test
     void applyFail() {
         User user = new User("이름", "이메일주소");
-        Mission mission = new Mission("미션제목", "2020-05-05 15:49");
+        Mission mission = new Mission("미션제목", "2021-05-05 15:48", "2021-05-05 15:50");
 
-        MissionManager.apply(mission, user);
+        MissionManager.apply(mission, user, "2021-05-05 15:49");
 
-        assertThat(MissionManager.apply(mission, user)).isFalse();
+        assertThat(MissionManager.apply(mission, user, "2021-05-05 15:49")).isFalse();
+    }
+
+    @DisplayName("미션 신청 실패 : 신청 기간 마감")
+    @Test
+    void applyFail2() {
+        User user = new User("이름", "이메일주소");
+        Mission mission = new Mission("미션제목", "2021-05-05 15:48", "2021-05-05 15:50");
+
+        assertThat(MissionManager.apply(mission, user, "2021-05-05 15:50")).isFalse();
     }
 }
