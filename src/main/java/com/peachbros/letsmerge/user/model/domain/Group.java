@@ -6,7 +6,6 @@ public class Group {
     private final List<User> users;
 
     public Group(List<User> users) {
-//        validate(users)
         this.users = users;
     }
 
