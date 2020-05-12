@@ -1,4 +1,4 @@
-package com.peachbros.letsmerge.mission.domain.model;
+package com.peachbros.letsmerge.mission.model.domain;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;

@@ -1,4 +1,4 @@
-package com.peachbros.letsmerge.mission.domain.model;
+package com.peachbros.letsmerge.mission.model.domain;
 
 import com.peachbros.letsmerge.user.model.domain.User;
 
