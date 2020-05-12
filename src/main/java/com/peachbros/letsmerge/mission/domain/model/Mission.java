@@ -14,4 +14,14 @@ public class Mission {
         this.startDateTime = LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES);
         this.dueDateTime = LocalDateTime.parse(dueDateTime, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
     }
+
+    public Mission(String name, String startDateTime, String dueDateTime) {
+        this.name = name;
+        this.startDateTime = LocalDateTime.parse(startDateTime, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+        this.dueDateTime = LocalDateTime.parse(dueDateTime, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+    }
+
+    public boolean isActive(LocalDateTime now) {
+        return startDateTime.isBefore(now) && dueDateTime.isAfter(now);
+    }
 }
