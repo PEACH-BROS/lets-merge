@@ -8,6 +8,4 @@ public class Users {
     public Users(List<User> users) {
         this.users = users;
     }
-
-
 }

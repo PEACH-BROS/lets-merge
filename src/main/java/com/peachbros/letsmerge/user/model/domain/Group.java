@@ -14,15 +14,7 @@ public class Group {
         this.users.add(user);
     }
 
-    public void joinGroup(Group group) {
-        users.addAll(group.getUsers());
-    }
-
     public int size() {
         return users.size();
-    }
-
-    public List<User> getUsers() {
-        return users;
     }
 }
