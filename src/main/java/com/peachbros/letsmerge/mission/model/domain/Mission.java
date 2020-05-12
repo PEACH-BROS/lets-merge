@@ -5,6 +5,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 
 public class Mission {
+    public static final String MISSION_DATE_FORMAT = "yyyy-MM-dd HH:mm";
     private final String name;
     private final LocalDateTime startDateTime;
     private final LocalDateTime dueDateTime;
@@ -12,7 +13,7 @@ public class Mission {
     public Mission(String name, String dueDateTime) {
         this.name = name;
         this.startDateTime = LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES);
-        this.dueDateTime = LocalDateTime.parse(dueDateTime, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+        this.dueDateTime = LocalDateTime.parse(dueDateTime, DateTimeFormatter.ofPattern(MISSION_DATE_FORMAT));
     }
 
     public Mission(String name, String startDateTime, String dueDateTime) {
