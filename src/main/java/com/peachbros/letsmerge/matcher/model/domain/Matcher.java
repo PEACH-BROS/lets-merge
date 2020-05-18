@@ -3,11 +3,15 @@ package com.peachbros.letsmerge.matcher.model.domain;
 import com.peachbros.letsmerge.user.model.domain.Group;
 import com.peachbros.letsmerge.user.model.domain.User;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class Matcher {
+
+    private static final int DEFAULT_GROUP_SIZE = 3;
 
     public static List<Group> match(List<User> users) {
         Collections.shuffle(users);
@@ -15,39 +19,28 @@ public class Matcher {
     }
 
     private static List<Group> calculate(List<User> users) {
-        List<Group> matchedGroup = new ArrayList<>();
-        divideThree(users, matchedGroup);
-        ifTwoRemains(users, matchedGroup);
-        ifOneRemains(users, matchedGroup);
+        int usersSize = users.size();
+
+        List<Group> matchedGroup = divideUsersByDefaultGroupSize(users, usersSize);
+
+        if (usersSize % DEFAULT_GROUP_SIZE == 1) {
+            Group firstGroup = matchedGroup.get(0);
+            firstGroup.add(users.get(usersSize - 1));
+            return matchedGroup;
+        }
+
+        if (usersSize % DEFAULT_GROUP_SIZE == 2) {
+            Group modGroup = new Group(Arrays.asList(users.get(usersSize - 1), users.get(usersSize - 2)));
+            matchedGroup.add(modGroup);
+        }
         return matchedGroup;
     }
 
-    private static void divideThree(List<User> users, List<Group> matchedGroup) {
-        List<User> small = new ArrayList<>();
-        int j = 0;
-        for (User user : users) {
-            small.add(user);
-            j++;
-            if (j == 3) {
-                j = 0;
-                matchedGroup.add(new Group(small));
-                small = new ArrayList<>();
-            }
-        }
-    }
-
-    private static void ifTwoRemains(List<User> users, List<Group> matchedGroup) {
-        List<User> small = new ArrayList<>();
-        if (users.size() % 3 == 2) {
-            small.add(users.get(users.size() - 2));
-            small.add(users.get(users.size() - 1));
-            matchedGroup.add(new Group(small));
-        }
-    }
-
-    private static void ifOneRemains(List<User> users, List<Group> matchedGroup) {
-        if (users.size() % 3 == 1) {
-            matchedGroup.get(0).add(users.get(users.size() - 1));
-        }
+    private static List<Group> divideUsersByDefaultGroupSize(List<User> users, int usersSize) {
+        return IntStream.range(0, usersSize / DEFAULT_GROUP_SIZE)
+                .map(i -> i * DEFAULT_GROUP_SIZE)
+                .mapToObj(i ->
+                        new Group(Arrays.asList(users.get(i), users.get(i + 1), users.get(i + 2))))
+                .collect(Collectors.toList());
     }
 }

@@ -5,6 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class MissionManagerTest {
 
@@ -14,7 +15,9 @@ class MissionManagerTest {
         User user = new User("이름", "이메일주소");
         Mission mission = new Mission("미션제목", "2021-05-05 15:48", "2021-05-05 15:50");
 
-        assertThat(MissionManager.apply(mission, user, "2021-05-05 15:49")).isTrue();
+        MissionManager.applyIfApplicable(mission, user, "2021-05-05 15:49");
+
+        assertThat(MissionManager.getApplicants().get(mission).contains(user)).isTrue();
     }
 
     @DisplayName("미션 신청 실패 : 중복 신청")
@@ -23,9 +26,10 @@ class MissionManagerTest {
         User user = new User("이름", "이메일주소");
         Mission mission = new Mission("미션제목", "2021-05-05 15:48", "2021-05-05 15:50");
 
-        MissionManager.apply(mission, user, "2021-05-05 15:49");
+        MissionManager.applyIfApplicable(mission, user, "2021-05-05 15:49");
 
-        assertThat(MissionManager.apply(mission, user, "2021-05-05 15:49")).isFalse();
+        assertThatThrownBy(() -> MissionManager.applyIfApplicable(mission, user, "2021-05-05 15:49"))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     @DisplayName("미션 신청 실패 : 신청 기간 마감")
@@ -34,6 +38,7 @@ class MissionManagerTest {
         User user = new User("이름", "이메일주소");
         Mission mission = new Mission("미션제목", "2021-05-05 15:48", "2021-05-05 15:50");
 
-        assertThat(MissionManager.apply(mission, user, "2021-05-05 15:50")).isFalse();
+        assertThatThrownBy(() -> MissionManager.applyIfApplicable(mission, user, "2021-05-05 15:50"))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 }
