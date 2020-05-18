@@ -14,7 +14,6 @@ public class Users {
         this.users = users;
     }
 
-
     public boolean contains(User target) {
         return users.contains(target);
     }

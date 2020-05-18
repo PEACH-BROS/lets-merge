@@ -1,6 +1,7 @@
 package com.peachbros.letsmerge.matcher.model.domain;
 
 import com.peachbros.letsmerge.user.model.domain.Group;
+import com.peachbros.letsmerge.user.model.domain.Groups;
 import com.peachbros.letsmerge.user.model.domain.User;
 
 import java.util.Arrays;
@@ -13,18 +14,17 @@ public class Matcher {
 
     private static final int DEFAULT_GROUP_SIZE = 3;
 
-    public static List<Group> match(List<User> users) {
+    public static Groups match(List<User> users) {
         Collections.shuffle(users);
         return calculate(users);
     }
 
-    private static List<Group> calculate(List<User> users) {
+    private static Groups calculate(List<User> users) {
         int usersSize = users.size();
-
-        List<Group> matchedGroup = divideUsersByDefaultGroupSize(users, usersSize);
+        Groups matchedGroup = divideUsersByDefaultGroupSize(users);
 
         if (usersSize % DEFAULT_GROUP_SIZE == 1) {
-            Group firstGroup = matchedGroup.get(0);
+            Group firstGroup = matchedGroup.getGroups().get(0);
             firstGroup.add(users.get(usersSize - 1));
             return matchedGroup;
         }
@@ -36,11 +36,11 @@ public class Matcher {
         return matchedGroup;
     }
 
-    private static List<Group> divideUsersByDefaultGroupSize(List<User> users, int usersSize) {
-        return IntStream.range(0, usersSize / DEFAULT_GROUP_SIZE)
+    private static Groups divideUsersByDefaultGroupSize(List<User> users) {
+        List<Group> groups = IntStream.range(0, users.size() / DEFAULT_GROUP_SIZE)
                 .map(i -> i * DEFAULT_GROUP_SIZE)
-                .mapToObj(i ->
-                        new Group(Arrays.asList(users.get(i), users.get(i + 1), users.get(i + 2))))
+                .mapToObj(i -> new Group(Arrays.asList(users.get(i), users.get(i + 1), users.get(i + 2))))
                 .collect(Collectors.toList());
+        return new Groups(groups);
     }
 }

@@ -1,6 +1,6 @@
 package com.peachbros.letsmerge.matcher.model.domain;
 
-import com.peachbros.letsmerge.user.model.domain.Group;
+import com.peachbros.letsmerge.user.model.domain.Groups;
 import com.peachbros.letsmerge.user.model.domain.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -28,10 +28,10 @@ class MatcherTest {
     @DisplayName("그룹 나누기 - 딱 떨어지는 경우")
     @Test
     void match() {
-        List<Group> groups = Matcher.match(users);
+        Groups groups = Matcher.match(users);
 
-        assertThat(groups.get(0).size()).isEqualTo(3);
-        assertThat(groups.get(1).size()).isEqualTo(3);
+        assertThat(groups.getGroups().get(0).size()).isEqualTo(3);
+        assertThat(groups.getGroups().get(1).size()).isEqualTo(3);
     }
 
     @DisplayName("그룹 나누기 - 나머지 1")
@@ -39,10 +39,10 @@ class MatcherTest {
     void match2() {
         users.add(new User("카일", "kyle@gmail.com"));
 
-        List<Group> groups = Matcher.match(users);
+        Groups groups = Matcher.match(users);
 
-        assertThat(groups.get(0).size()).isEqualTo(4);
-        assertThat(groups.get(1).size()).isEqualTo(3);
+        assertThat(groups.getGroups().get(0).size()).isEqualTo(4);
+        assertThat(groups.getGroups().get(1).size()).isEqualTo(3);
     }
 
     @DisplayName("그룹 나누기 - 나머지 2")
@@ -51,10 +51,10 @@ class MatcherTest {
         users.add(new User("카일", "kyle@gmail.com"));
         users.add(new User("카일", "kyle@gmail.com"));
 
-        List<Group> groups = Matcher.match(users);
+        Groups groups = Matcher.match(users);
 
-        assertThat(groups.get(0).size()).isEqualTo(3);
-        assertThat(groups.get(1).size()).isEqualTo(3);
-        assertThat(groups.get(2).size()).isEqualTo(2);
+        assertThat(groups.getGroups().get(0).size()).isEqualTo(3);
+        assertThat(groups.getGroups().get(1).size()).isEqualTo(3);
+        assertThat(groups.getGroups().get(2).size()).isEqualTo(2);
     }
 }
