@@ -14,6 +14,11 @@ public class Groups {
         groups.add(group);
     }
 
+    public void addUserInFirstGroup(User user) {
+        Group firstGroup = groups.get(0);
+        firstGroup.add(user);
+    }
+
     public List<Group> getGroups() {
         return Collections.unmodifiableList(groups);
     }

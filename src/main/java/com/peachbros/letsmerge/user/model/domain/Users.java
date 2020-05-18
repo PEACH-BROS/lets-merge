@@ -1,6 +1,7 @@
 package com.peachbros.letsmerge.user.model.domain;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Users {
@@ -20,5 +21,17 @@ public class Users {
 
     public void add(User target) {
         users.add(target);
+    }
+
+    public void shuffle() {
+        Collections.shuffle(this.users);
+    }
+
+    public int size() {
+        return users.size();
+    }
+
+    public User get(int index) {
+        return users.get(index);
     }
 }
