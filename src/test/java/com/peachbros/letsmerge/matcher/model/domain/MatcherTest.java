@@ -13,6 +13,13 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class MatcherTest {
+    @DisplayName("생성자 테스트")
+    @Test
+    void constructor() {
+        Matcher matcher = new Matcher();
+        assertThat(matcher).isInstanceOf(Matcher.class);
+    }
+
     @DisplayName("그룹 나누기 - 딱 떨어지는 경우")
     @Test
     void match() {
