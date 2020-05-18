@@ -1,5 +1,6 @@
 package com.peachbros.letsmerge.matcher.model.domain;
 
+import com.peachbros.letsmerge.matcher.model.domain.strategy.ThreeMatchStrategy;
 import com.peachbros.letsmerge.user.model.domain.Groups;
 import com.peachbros.letsmerge.user.model.domain.User;
 import com.peachbros.letsmerge.user.model.domain.Users;
@@ -16,7 +17,7 @@ class MatcherTest {
     @Test
     void match() {
         Users users = createUsers(6);
-        Groups groups = Matcher.match(users);
+        Groups groups = Matcher.match(users, new ThreeMatchStrategy());
 
         assertThat(groups.getGroups().get(0).size()).isEqualTo(3);
         assertThat(groups.getGroups().get(1).size()).isEqualTo(3);
@@ -26,7 +27,7 @@ class MatcherTest {
     @Test
     void match2() {
         Users users = createUsers(7);
-        Groups groups = Matcher.match(users);
+        Groups groups = Matcher.match(users, new ThreeMatchStrategy());
 
         assertThat(groups.getGroups().get(0).size()).isEqualTo(4);
         assertThat(groups.getGroups().get(1).size()).isEqualTo(3);
@@ -36,7 +37,7 @@ class MatcherTest {
     @Test
     void match3() {
         Users users = createUsers(8);
-        Groups groups = Matcher.match(users);
+        Groups groups = Matcher.match(users, new ThreeMatchStrategy());
 
         assertThat(groups.getGroups().get(0).size()).isEqualTo(3);
         assertThat(groups.getGroups().get(1).size()).isEqualTo(3);
