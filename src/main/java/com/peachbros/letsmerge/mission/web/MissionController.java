@@ -1,17 +1,13 @@
 package com.peachbros.letsmerge.mission.web;
 
-import com.peachbros.letsmerge.mission.dto.MissionSaveRequest;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import com.peachbros.letsmerge.mission.service.MissionService;
 import org.springframework.web.bind.annotation.RestController;
-
-import javax.validation.Valid;
 
 @RestController
 public class MissionController {
+    private MissionService missionService;
 
-
-    @PostMapping
-    public void get(@RequestBody @Valid MissionSaveRequest request) {
+    public MissionController(MissionService missionService) {
+        this.missionService = missionService;
     }
 }
