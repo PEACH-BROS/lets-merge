@@ -1,12 +1,8 @@
 package com.peachbros.letsmerge.mission.model.repository;
 
 import com.peachbros.letsmerge.mission.model.domain.Mission;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
+public interface MissionRepository extends JpaRepository<Mission, Long> {
 
-public interface MissionRepository extends CrudRepository<Mission, Long> {
-
-    @Override
-    List<Mission> findAll();
 }

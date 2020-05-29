@@ -1,23 +1,21 @@
 package com.peachbros.letsmerge.mission.web;
 
-import com.peachbros.letsmerge.mission.model.domain.Mission;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.peachbros.letsmerge.mission.service.MissionService;
-import com.peachbros.letsmerge.mission.service.dto.MissionResponse;
+import com.peachbros.letsmerge.mission.service.dto.MissionCreateRequest;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.List;
 
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -25,6 +23,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class MissionControllerTest {
     @MockBean
     private MissionService missionService;
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     private MockMvc mockMvc;
 
@@ -34,19 +35,19 @@ class MissionControllerTest {
                 .build();
     }
 
-    @DisplayName("admin 페이지 접근 시 초기화면")
     @Test
-    void showMissionList() throws Exception {
-        List<MissionResponse> responses = Arrays.asList(mockMissionResponse(), mockMissionResponse());
-        when(missionService.showMissions()).thenReturn(responses);
+    public void addMission() throws Exception {
+        MissionCreateRequest request = new MissionCreateRequest("미션 제목", LocalDateTime.of(2020, 5, 5, 0, 0, 0),
+                LocalDateTime.of(2020, 5, 10, 0, 0, 0));
 
-        this.mockMvc.perform(get("/admin"))
-                .andExpect(status().isOk())
+        String data = objectMapper.writeValueAsString(request);
+
+        this.mockMvc.perform(post("/admin/missions")
+                .content(data)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated())
                 .andDo(print());
     }
 
-    private MissionResponse mockMissionResponse() {
-        return MissionResponse.of(new Mission("미션제목", LocalDateTime.of(2020, 5, 5, 0, 0, 0),
-                LocalDateTime.of(2020, 5, 10, 0, 0, 0)));
-    }
+
 }

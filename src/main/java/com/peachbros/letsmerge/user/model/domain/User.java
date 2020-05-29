@@ -1,10 +1,20 @@
 package com.peachbros.letsmerge.user.model.domain;
 
+import javax.persistence.*;
 import java.util.Objects;
 
+@Entity
 public class User {
-    private final String name;
-    private final String email;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @Column(nullable = false)
+    private String name;
+    @Column(nullable = false)
+    private String email;
+
+    protected User() {
+    }
 
     public User(String name, String email) {
         this.name = name;

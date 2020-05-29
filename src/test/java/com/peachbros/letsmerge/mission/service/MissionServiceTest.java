@@ -2,42 +2,57 @@ package com.peachbros.letsmerge.mission.service;
 
 import com.peachbros.letsmerge.mission.model.domain.Mission;
 import com.peachbros.letsmerge.mission.model.repository.MissionRepository;
+import com.peachbros.letsmerge.mission.service.dto.MissionCreateRequest;
 import com.peachbros.letsmerge.mission.service.dto.MissionResponse;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
 
-@ExtendWith(MockitoExtension.class)
+@SpringBootTest
 class MissionServiceTest {
-    @Mock
+    @Autowired
     private MissionRepository missionRepository;
 
+    @Autowired
     private MissionService missionService;
 
-    @BeforeEach
-    void setUp() {
-        missionService = new MissionService(missionRepository);
+    @DisplayName("미션 추가")
+    @Test
+    void addMission() {
+        MissionCreateRequest request = new MissionCreateRequest("MISSION_NAME", LocalDateTime.of(2020, 5, 24, 0, 0, 0),
+                LocalDateTime.of(2020, 5, 25, 0, 0, 0));
+
+        MissionResponse missionResponse = missionService.addMission(request);
+        Mission persistMission = missionRepository.findAll().get(0);
+
+        assertThat(missionResponse.getId()).isEqualTo(persistMission.getId());
     }
 
     @DisplayName("미션 리스트 가져오기")
     @Test
     void showMissions() {
         List<Mission> missions = Arrays.asList(mockMission(), mockMission(), mockMission());
-        when(missionRepository.findAll()).thenReturn(missions);
+        missionRepository.saveAll(missions);
 
         List<MissionResponse> missionResponses = missionService.showMissions();
 
         assertThat(missionResponses.size()).isEqualTo(missions.size());
+    }
+
+    @Test
+    void deleteMission() {
+        Mission persistMission = missionRepository.save(mockMission());
+
+        assertThat(missionRepository.findAll()).isNotEmpty();
+        missionService.deleteMission(persistMission.getId());
+        assertThat(missionRepository.findAll()).isEmpty();
     }
 
     private Mission mockMission() {
