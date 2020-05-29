@@ -7,14 +7,17 @@ public class StandardResponse<T> {
     private T data;
     private String message;
 
+    private StandardResponse() {
+    }
+
     private StandardResponse(Integer statusCode, T data, String message) {
         this.statusCode = statusCode;
         this.data = data;
         this.message = message;
     }
 
-    public static <T> StandardResponse<T> of(Integer statusCode, T data, String message) {
-        return new StandardResponse<>(statusCode, data, message);
+    public static <T> StandardResponse<T> of(Integer statusCode, T data) {
+        return new StandardResponse<>(statusCode, data, null);
     }
 
     public static <T> StandardResponse<T> error(Integer statusCode, String message) {

@@ -4,15 +4,15 @@ import com.peachbros.letsmerge.mission.model.domain.Mission;
 import com.peachbros.letsmerge.mission.model.repository.MissionRepository;
 import com.peachbros.letsmerge.mission.service.dto.MissionCreateRequest;
 import com.peachbros.letsmerge.mission.service.dto.MissionResponse;
+import com.peachbros.letsmerge.mission.service.dto.MissionsResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class MissionService {
-    private MissionRepository missionRepository;
+    private final MissionRepository missionRepository;
 
     public MissionService(MissionRepository missionRepository) {
         this.missionRepository = missionRepository;
@@ -27,11 +27,9 @@ public class MissionService {
     }
 
     @Transactional(readOnly = true)
-    public List<MissionResponse> showMissions() {
+    public MissionsResponse showMissions() {
         List<Mission> missions = missionRepository.findAll();
-        return missions.stream()
-                .map(MissionResponse::of)
-                .collect(Collectors.toList());
+        return MissionsResponse.of(missions);
     }
 
     public void deleteMission(Long missionId) {

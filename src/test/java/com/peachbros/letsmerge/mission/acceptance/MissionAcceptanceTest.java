@@ -45,8 +45,6 @@ public class MissionAcceptanceTest {
         MissionsResponse missionsResponse = showMissions();
 
         assertThat(missionsResponse.getMissions()).hasSize(2);
-
-
     }
 
     private void addMission(MissionCreateRequest missionCreateRequest) {
