@@ -5,6 +5,7 @@ import com.peachbros.letsmerge.mission.model.repository.MissionRepository;
 import com.peachbros.letsmerge.mission.service.dto.MissionCreateRequest;
 import com.peachbros.letsmerge.mission.service.dto.MissionResponse;
 import com.peachbros.letsmerge.mission.service.dto.MissionsResponse;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,16 @@ class MissionServiceTest {
 
     @Autowired
     private MissionService missionService;
+//
+//    @BeforeEach
+//    void beforeEach() {
+//        missionRepository.deleteAll();
+//    }
+
+    @AfterEach
+    void afterEach() {
+        missionRepository.deleteAll();
+    }
 
     @DisplayName("미션 추가")
     @Test
@@ -44,7 +55,7 @@ class MissionServiceTest {
 
         MissionsResponse missionResponses = missionService.showMissions();
 
-//        assertThat(missionResponses.size()).isEqualTo(missions.size());
+        assertThat(missionResponses.getMissions()).hasSize(missions.size());
     }
 
     @Test
@@ -52,6 +63,7 @@ class MissionServiceTest {
         Mission persistMission = missionRepository.save(mockMission());
 
         assertThat(missionRepository.findAll()).isNotEmpty();
+
         missionService.deleteMission(persistMission.getId());
         assertThat(missionRepository.findAll()).isEmpty();
     }

@@ -1,35 +1,33 @@
 package com.peachbros.letsmerge.core.dto;
 
-import org.springframework.http.HttpStatus;
+import com.peachbros.letsmerge.core.ErrorCode;
 
 public class StandardResponse<T> {
-    private Integer statusCode;
     private T data;
     private String message;
 
     private StandardResponse() {
     }
 
-    private StandardResponse(Integer statusCode, T data, String message) {
-        this.statusCode = statusCode;
+    public StandardResponse(T data, String message) {
         this.data = data;
         this.message = message;
     }
 
     public static <T> StandardResponse<T> of(Integer statusCode, T data) {
-        return new StandardResponse<>(statusCode, data, null);
+        return new StandardResponse<>(data, null);
     }
 
-    public static <T> StandardResponse<T> error(Integer statusCode, String message) {
-        return new StandardResponse<>(statusCode, null, message);
+    public static StandardResponse<ErrorResponse> error(ErrorCode errorCode) {
+        return new StandardResponse<>(ErrorResponse.of(errorCode), null);
+    }
+
+    public static StandardResponse<ErrorResponse> error(ErrorCode errorCode, String errorMessage) {
+        return new StandardResponse<>(ErrorResponse.of(errorCode, errorMessage), null);
     }
 
     public static <T> StandardResponse<T> empty() {
-        return new StandardResponse<>(HttpStatus.NO_CONTENT.value(), null, null);
-    }
-
-    public Integer getStatusCode() {
-        return statusCode;
+        return new StandardResponse<>(null, null);
     }
 
     public T getData() {

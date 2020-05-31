@@ -7,10 +7,7 @@ import com.peachbros.letsmerge.mission.service.dto.MissionResponse;
 import com.peachbros.letsmerge.mission.service.dto.MissionsResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.net.URI;
@@ -24,13 +21,19 @@ public class MissionController {
     }
 
     @PostMapping("/admin/missions")
-    public ResponseEntity<StandardResponse<Void>> addMission(@RequestBody @Valid MissionCreateRequest request) {
+    public ResponseEntity<Void> addMission(@RequestBody @Valid MissionCreateRequest request) {
         MissionResponse response = missionService.addMission(request);
-        return ResponseEntity.created(URI.create("/admin/missions/" + response.getId())).body(StandardResponse.empty());
+        return ResponseEntity.created(URI.create("/admin/missions/" + response.getId())).build();
     }
 
     @GetMapping("/admin/missions")
     public StandardResponse<MissionsResponse> showMissions() {
         return StandardResponse.of(HttpStatus.OK.value(), missionService.showMissions());
+    }
+
+    @DeleteMapping("/admin/missions")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteMissions() {
+        missionService.deleteMissions();
     }
 }

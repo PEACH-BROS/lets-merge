@@ -34,7 +34,11 @@ public class MissionService {
 
     public void deleteMission(Long missionId) {
         Mission mission = missionRepository.findById(missionId)
-                .orElseThrow(IllegalArgumentException::new);
+                .orElseThrow(() -> new IllegalArgumentException("해당 미션을 찾을 수 없습니다."));
         missionRepository.delete(mission);
+    }
+
+    public void deleteMissions() {
+        missionRepository.deleteAll();
     }
 }

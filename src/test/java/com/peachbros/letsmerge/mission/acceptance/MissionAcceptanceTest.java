@@ -6,6 +6,7 @@ import com.peachbros.letsmerge.mission.service.dto.MissionsResponse;
 import io.restassured.RestAssured;
 import io.restassured.mapper.TypeRef;
 import io.restassured.specification.RequestSpecification;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -19,9 +20,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class MissionAcceptanceTest {
+    public static final String MISSION_NAME = "체스 미션";
     public static final LocalDateTime START_DATE_TIME = LocalDateTime.of(2020, 5, 5, 0, 0, 0);
     public static final LocalDateTime END_DATE_TIME = LocalDateTime.of(2020, 5, 12, 0, 0, 0);
-    public static final String MISSION_NAME = "체스 미션";
+
     @LocalServerPort
     int port;
 
@@ -32,6 +34,11 @@ public class MissionAcceptanceTest {
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
+    }
+
+    @AfterEach
+    void afterEach() {
+        deleteMissions();
     }
 
     @Test
@@ -69,5 +76,14 @@ public class MissionAcceptanceTest {
                 .extract().as(new TypeRef<StandardResponse<MissionsResponse>>() {
                 });
         return response.getData();
+    }
+
+    private void deleteMissions() {
+        given()
+                .when()
+                .delete("/admin/missions")
+                .then()
+                .statusCode(HttpStatus.NO_CONTENT.value())
+                .log().all();
     }
 }
