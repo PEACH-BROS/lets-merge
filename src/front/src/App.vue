@@ -1,10 +1,7 @@
 <template>
     <div id="app">
         <div id="container">
-            <div id="header">
-                <span onclick="location.href='https://www.naver.com'">미션 목록</span>
-                <span onclick="location.href=''">회원 목록</span>
-            </div>
+            <NavigationBar/>
             <div id="body">
                 <MissionList/>
             </div>
@@ -15,17 +12,18 @@
 <script>
     import './assets/styles/style.css'
     import MissionList from "./components/MissionList";
+    import NavigationBar from "./components/navigartion/NavigationBar";
 
     export default {
         name: 'App',
         components: {
-            MissionList
+            MissionList,
+            NavigationBar
         }
     }
 </script>
 
 <style>
-
     #app {
         font-family: Avenir, Helvetica, Arial, sans-serif;
         -webkit-font-smoothing: antialiased;
