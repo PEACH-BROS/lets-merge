@@ -1,22 +1,31 @@
 <template>
     <div id="app">
-        <img alt="Vue logo" src="./assets/logo.png">
-        <HelloWorld msg="Welcome to Your Vue.js App"/>
+        <div id="container">
+            <div id="header">
+                <span onclick="location.href='https://www.naver.com'">미션 목록</span>
+                <span onclick="location.href=''">회원 목록</span>
+            </div>
+            <div id="body">
+                <MissionList/>
+            </div>
+        </div>
     </div>
 </template>
 
 <script>
-  import HelloWorld from './components/HelloWorld.vue'
+    import './assets/styles/style.css'
+    import MissionList from "./components/MissionList";
 
-  export default {
+    export default {
         name: 'App',
         components: {
-            HelloWorld
+            MissionList
         }
     }
 </script>
 
 <style>
+
     #app {
         font-family: Avenir, Helvetica, Arial, sans-serif;
         -webkit-font-smoothing: antialiased;
