@@ -30,3 +30,6 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### github client id, secret id
+application-github.properties

@@ -24,3 +24,7 @@ spring:
         format_sql: false
         hbm2ddl:
           auto: update
+---
+spring:
+  profiles:
+    include: github
