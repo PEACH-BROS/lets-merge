@@ -1,21 +1,19 @@
 <template>
     <div id="app">
-        <div id="container">
-            <NavigationBar/>
-            <div id="body">
-                <router-view/>
-            </div>
-        </div>
+        <NavigationBar/>
+        <DefaultContainer/>
     </div>
 </template>
 
 <script>
-    import './assets/styles/style.css'
-    import NavigationBar from "./components/navigartion/NavigationBar";
+    import '@/assets/styles/style.css';
+    import DefaultContainer from "@/containers/DefaultContainer";
+    import NavigationBar from "@/components/navigartion/NavigationBar";
 
     export default {
         name: 'App',
         components: {
+            DefaultContainer,
             NavigationBar
         }
     }

@@ -4,7 +4,7 @@
             <NavigationItem
                     :category="category"
                     :key="category.name"
-                    v-for="category in categories"
+                    v-for="category in adminCategories"
             />
         </nav>
     </div>
@@ -20,7 +20,7 @@
             NavigationItem
         },
         computed: {
-            ...mapState('category', ['categories']),
+            ...mapState('category', ['adminCategories']),
         },
         methods: {}
     }

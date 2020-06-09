@@ -1,21 +1,31 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import DefaultContainer from "@/containers/DefaultContainer";
 import MissionList from '@/components/MissionList.vue'
 import MemberList from '@/components/MemberList.vue'
 
-Vue.use(VueRouter)
+Vue.use(VueRouter);
 
 const routes = [
     {
-        path: '/missions',
-        name: 'MissionList',
-        component: MissionList
-    },
-    {
-        path: '/members',
-        name: 'Members',
-        component: MemberList
+        path: '/admin',
+        // redirect: '/admin/missions',
+        component: DefaultContainer,
+        children: [
+            {
+                path: 'missions',
+                name: 'MissionList',
+                component: MissionList
+            },
+            {
+                path: 'members',
+                name: 'MemberList',
+                component: MemberList
+            }
+        ]
     }
+
+
 ]
 
 const router = new VueRouter({
