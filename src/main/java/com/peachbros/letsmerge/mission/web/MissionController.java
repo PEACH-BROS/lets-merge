@@ -7,7 +7,10 @@ import com.peachbros.letsmerge.mission.service.dto.MissionResponse;
 import com.peachbros.letsmerge.mission.service.dto.MissionsResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.net.URI;
@@ -31,9 +34,4 @@ public class MissionController {
         return StandardResponse.of(HttpStatus.OK.value(), missionService.showMissions());
     }
 
-    @DeleteMapping("/admin/missions")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteMissions() {
-        missionService.deleteMissions();
-    }
 }

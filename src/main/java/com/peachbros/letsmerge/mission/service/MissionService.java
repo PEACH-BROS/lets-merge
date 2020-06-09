@@ -26,19 +26,15 @@ public class MissionService {
         return MissionResponse.of(persistMission);
     }
 
-    @Transactional(readOnly = true)
     public MissionsResponse showMissions() {
         List<Mission> missions = missionRepository.findAll();
         return MissionsResponse.of(missions);
     }
 
+    @Transactional
     public void deleteMission(Long missionId) {
         Mission mission = missionRepository.findById(missionId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 미션을 찾을 수 없습니다."));
         missionRepository.delete(mission);
-    }
-
-    public void deleteMissions() {
-        missionRepository.deleteAll();
     }
 }

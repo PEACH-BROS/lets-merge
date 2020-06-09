@@ -1,6 +1,7 @@
 package com.peachbros.letsmerge.mission.acceptance;
 
 import com.peachbros.letsmerge.core.dto.StandardResponse;
+import com.peachbros.letsmerge.mission.model.repository.MissionRepository;
 import com.peachbros.letsmerge.mission.service.dto.MissionCreateRequest;
 import com.peachbros.letsmerge.mission.service.dto.MissionsResponse;
 import io.restassured.RestAssured;
@@ -9,6 +10,7 @@ import io.restassured.specification.RequestSpecification;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
@@ -27,6 +29,9 @@ public class MissionAcceptanceTest {
     @LocalServerPort
     int port;
 
+    @Autowired
+    private MissionRepository missionRepository;
+
     public static RequestSpecification given() {
         return RestAssured.given().log().all();
     }
@@ -38,7 +43,7 @@ public class MissionAcceptanceTest {
 
     @AfterEach
     void afterEach() {
-        deleteMissions();
+        missionRepository.deleteAll();
     }
 
     @Test
@@ -76,14 +81,5 @@ public class MissionAcceptanceTest {
                 .extract().as(new TypeRef<StandardResponse<MissionsResponse>>() {
                 });
         return response.getData();
-    }
-
-    private void deleteMissions() {
-        given()
-                .when()
-                .delete("/admin/missions")
-                .then()
-                .statusCode(HttpStatus.NO_CONTENT.value())
-                .log().all();
     }
 }
