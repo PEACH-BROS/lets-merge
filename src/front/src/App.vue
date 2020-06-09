@@ -3,7 +3,7 @@
         <div id="container">
             <NavigationBar/>
             <div id="body">
-                <MissionList/>
+                <router-view/>
             </div>
         </div>
     </div>
@@ -11,13 +11,11 @@
 
 <script>
     import './assets/styles/style.css'
-    import MissionList from "./components/MissionList";
     import NavigationBar from "./components/navigartion/NavigationBar";
 
     export default {
         name: 'App',
         components: {
-            MissionList,
             NavigationBar
         }
     }

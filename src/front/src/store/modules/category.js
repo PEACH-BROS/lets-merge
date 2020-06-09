@@ -2,8 +2,8 @@ export default {
     namespaced: true,
     state: {
         categories: [
-            {name: "미션 목록", selected: true},
-            {name: "회원 목록", selected: false},
+            {name: "미션 목록", path: "missions", selected: true},
+            {name: "회원 목록", path: "members", selected: false},
         ]
     },
     mutations: {
