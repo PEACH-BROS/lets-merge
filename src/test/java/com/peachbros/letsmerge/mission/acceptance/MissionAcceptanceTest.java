@@ -27,7 +27,7 @@ public class MissionAcceptanceTest {
     public static final LocalDateTime END_DATE_TIME = LocalDateTime.of(2020, 5, 12, 0, 0, 0);
 
     @LocalServerPort
-    int port;
+    private int port;
 
     @Autowired
     private MissionRepository missionRepository;
