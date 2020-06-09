@@ -51,12 +51,17 @@ public class MissionAcceptanceTest {
         MissionCreateRequest missionCreateRequest1 = new MissionCreateRequest(MISSION_NAME, START_DATE_TIME, END_DATE_TIME);
         MissionCreateRequest missionCreateRequest2 = new MissionCreateRequest(MISSION_NAME, START_DATE_TIME, END_DATE_TIME);
 
+        //미션 추가
         addMission(missionCreateRequest1);
         addMission(missionCreateRequest2);
 
+        //미션 조회
         MissionsResponse missionsResponse = showMissions();
-
         assertThat(missionsResponse.getMissions()).hasSize(2);
+
+        //미션 삭제
+        deleteMission(missionsResponse.getMissions().get(0).getId());
+        assertThat(showMissions().getMissions()).hasSize(1);
     }
 
     private void addMission(MissionCreateRequest missionCreateRequest) {
@@ -81,5 +86,14 @@ public class MissionAcceptanceTest {
                 .extract().as(new TypeRef<StandardResponse<MissionsResponse>>() {
                 });
         return response.getData();
+    }
+
+    private void deleteMission(Long missionId) {
+        given()
+                .when()
+                .delete("/admin/missions/" + missionId)
+                .then()
+                .statusCode(HttpStatus.NO_CONTENT.value())
+                .log().all();
     }
 }
