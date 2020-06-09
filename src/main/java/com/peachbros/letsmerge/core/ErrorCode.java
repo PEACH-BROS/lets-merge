@@ -9,7 +9,7 @@ package com.peachbros.letsmerge.core;
  */
 public enum ErrorCode {
     UNEXPECTED_EXCEPTION(1000, "예기치 않은 에러가 발생했습니다."),
-    VALIDATION_EXCEPTION(1100, ""),
+    VALIDATION_EXCEPTION(1100, "올바른 형식이 아닙니다."),
     MISSION_EXCEPTION(2000, "미션 익셉션"),
     USER_EXCEPTION(3000, "유저 익셉션"),
     MATCHER_EXCEPTION(4000, "매쳐 익셉션");

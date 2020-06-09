@@ -20,6 +20,12 @@ public class CommonControllerAdvice {
     private static final Logger log = LoggerFactory.getLogger(CommonControllerAdvice.class);
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(RuntimeException.class)
+    public StandardResponse<ErrorResponse> handleException(RuntimeException e) {
+        return StandardResponse.error(ErrorCode.UNEXPECTED_EXCEPTION, e.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public StandardResponse<ErrorResponse> handleValidationException(MethodArgumentNotValidException e) {
         log.error(e.getMessage());

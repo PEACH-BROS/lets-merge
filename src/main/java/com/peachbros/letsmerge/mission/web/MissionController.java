@@ -26,14 +26,16 @@ public class MissionController {
         return ResponseEntity.created(URI.create("/admin/missions/" + response.getId())).build();
     }
 
+    @ResponseStatus(HttpStatus.OK)
     @GetMapping("/admin/missions")
     public StandardResponse<MissionsResponse> showMissions() {
-        return StandardResponse.of(HttpStatus.OK.value(), missionService.showMissions());
+        return StandardResponse.of(missionService.showMissions());
     }
 
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/admin/missions/{id}")
-    public ResponseEntity<Void> deleteMission(@PathVariable Long id) {
+    public StandardResponse<Void> deleteMission(@PathVariable Long id) {
         missionService.deleteMission(id);
-        return ResponseEntity.noContent().build();
+        return StandardResponse.empty();
     }
 }

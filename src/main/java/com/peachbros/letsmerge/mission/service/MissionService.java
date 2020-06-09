@@ -1,5 +1,6 @@
 package com.peachbros.letsmerge.mission.service;
 
+import com.peachbros.letsmerge.core.exception.NoSuchValueException;
 import com.peachbros.letsmerge.mission.model.domain.Mission;
 import com.peachbros.letsmerge.mission.model.repository.MissionRepository;
 import com.peachbros.letsmerge.mission.service.dto.MissionCreateRequest;
@@ -34,7 +35,7 @@ public class MissionService {
     @Transactional
     public void deleteMission(Long missionId) {
         Mission mission = missionRepository.findById(missionId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 미션을 찾을 수 없습니다."));
+                .orElseThrow(() -> new NoSuchValueException("해당 미션을 찾을 수 없습니다."));
         missionRepository.delete(mission);
     }
 }

@@ -2,12 +2,17 @@ package com.peachbros.letsmerge.mission.web;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.peachbros.letsmerge.core.ErrorCode;
+import com.peachbros.letsmerge.core.dto.ErrorResponse;
 import com.peachbros.letsmerge.core.dto.StandardResponse;
+import com.peachbros.letsmerge.core.exception.NoSuchValueException;
 import com.peachbros.letsmerge.mission.model.domain.Mission;
-import com.peachbros.letsmerge.mission.model.repository.MissionRepository;
+import com.peachbros.letsmerge.mission.service.MissionService;
 import com.peachbros.letsmerge.mission.service.dto.MissionCreateRequest;
+import com.peachbros.letsmerge.mission.service.dto.MissionResponse;
 import com.peachbros.letsmerge.mission.service.dto.MissionsResponse;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -25,9 +30,8 @@ import java.util.List;
 import static com.peachbros.letsmerge.mission.acceptance.MissionAcceptanceTest.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -35,7 +39,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 class MissionControllerTest {
     @MockBean
-    private MissionRepository missionRepository;
+    private MissionService missionService;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -50,36 +54,67 @@ class MissionControllerTest {
     }
 
     @Test
-    public void addMission() throws Exception {
+    void addMission() throws Exception {
         MissionCreateRequest request = new MissionCreateRequest(MISSION_NAME, START_DATE_TIME, END_DATE_TIME);
         Mission mission = request.toMission();
-        String data = objectMapper.writeValueAsString(request);
-
-        when(missionRepository.save(any())).thenReturn(mission);
+        String missionCreateRequestData = objectMapper.writeValueAsString(request);
+        when(missionService.addMission(any())).thenReturn(MissionResponse.of(mission));
 
         this.mockMvc.perform(post("/admin/missions")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .content(data))
+                .content(missionCreateRequestData))
                 .andExpect(status().isCreated())
                 .andExpect(header().exists("Location"))
                 .andDo(print());
     }
 
+
     @Test
     void showMissions() throws Exception {
         List<Mission> missions = Arrays.asList(mockMission(), mockMission(), mockMission());
 
-        when(missionRepository.findAll()).thenReturn(missions);
+        when(missionService.showMissions()).thenReturn(MissionsResponse.of(missions));
 
         MvcResult mvcResult = this.mockMvc.perform(get("/admin/missions")
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andReturn();
+
         StandardResponse<MissionsResponse> missionsResponse = objectMapper.
                 readValue(mvcResult.getResponse().getContentAsString(), new TypeReference<StandardResponse<MissionsResponse>>() {
                 });
         assertThat(missionsResponse.getData().getMissions()).hasSize(missions.size());
+    }
+
+    @Test
+    void deleteMission() throws Exception {
+        doNothing().when(missionService).deleteMission(any());
+
+        this.mockMvc.perform(delete("/admin/missions/1"))
+                .andExpect(status().isNoContent())
+                .andDo(print());
+
+        verify(missionService).deleteMission(any());
+    }
+
+    @DisplayName("미션 삭제 예외상황 : 삭제할 미션이 없는 경우")
+    @Test
+    void deleteMissionException1() throws Exception {
+        doThrow(NoSuchValueException.class).when(missionService).deleteMission(any());
+
+        MvcResult mvcResult = this.mockMvc.perform(delete("/admin/missions/1")
+                .accept(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isBadRequest())
+                .andDo(print())
+                .andReturn();
+
+        StandardResponse<ErrorResponse> response = objectMapper.readValue(mvcResult.getResponse().getContentAsString(),
+                new TypeReference<StandardResponse<ErrorResponse>>() {
+                });
+
+        verify(missionService).deleteMission(any());
+        assertThat(response.getData().getCode()).isEqualTo(ErrorCode.UNEXPECTED_EXCEPTION.getValue());
     }
 
     private Mission mockMission() {

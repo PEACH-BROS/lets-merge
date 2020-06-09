@@ -3,8 +3,11 @@ package com.peachbros.letsmerge.core.dto;
 import com.peachbros.letsmerge.core.ErrorCode;
 
 public class ErrorResponse {
-    private final Integer code;
-    private final String message;
+    private Integer code;
+    private String message;
+
+    private ErrorResponse() {
+    }
 
     private ErrorResponse(Integer code, String message) {
         this.code = code;
