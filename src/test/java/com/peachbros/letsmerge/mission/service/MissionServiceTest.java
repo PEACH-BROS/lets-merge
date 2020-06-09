@@ -1,5 +1,6 @@
 package com.peachbros.letsmerge.mission.service;
 
+import com.peachbros.letsmerge.core.exception.NoSuchValueException;
 import com.peachbros.letsmerge.mission.model.domain.Mission;
 import com.peachbros.letsmerge.mission.model.repository.MissionRepository;
 import com.peachbros.letsmerge.mission.service.dto.MissionCreateRequest;
@@ -16,6 +17,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
 class MissionServiceTest {
@@ -24,11 +26,6 @@ class MissionServiceTest {
 
     @Autowired
     private MissionService missionService;
-//
-//    @BeforeEach
-//    void beforeEach() {
-//        missionRepository.deleteAll();
-//    }
 
     @AfterEach
     void afterEach() {
@@ -66,6 +63,13 @@ class MissionServiceTest {
 
         missionService.deleteMission(persistMission.getId());
         assertThat(missionRepository.findAll()).isEmpty();
+    }
+
+    @DisplayName("미션 삭제 예외상황 : 삭제할 미션이 없는 경우")
+    @Test
+    void deleteMissionException1() {
+        assertThatThrownBy(() -> missionService.deleteMission(1L))
+                .isInstanceOf(NoSuchValueException.class);
     }
 
     private Mission mockMission() {
