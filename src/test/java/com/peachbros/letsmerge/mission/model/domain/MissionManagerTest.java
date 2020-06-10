@@ -12,14 +12,14 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 class MissionManagerTest {
 
     private static final LocalDateTime START_DATE_TIME = LocalDateTime.of(2020, 5, 5, 15, 48);
-    private static final LocalDateTime END_DATE_TIME = LocalDateTime.of(2020, 5, 5, 15, 50);
+    private static final LocalDateTime DUE_DATE_TIME = LocalDateTime.of(2020, 5, 5, 15, 50);
     private static final LocalDateTime TEST_DATE_TIME = LocalDateTime.of(2020, 5, 5, 15, 49);
 
     @DisplayName("미션 신청 성공")
     @Test
     void applySuccess() {
         User user = new User("이름", "이메일주소");
-        Mission mission = new Mission("미션제목", START_DATE_TIME, END_DATE_TIME);
+        Mission mission = new Mission("미션제목", START_DATE_TIME, DUE_DATE_TIME);
 
         MissionManager.applyIfApplicable(mission, user, TEST_DATE_TIME);
 
@@ -30,7 +30,7 @@ class MissionManagerTest {
     @Test
     void applyFail() {
         User user = new User("이름", "이메일주소");
-        Mission mission = new Mission("미션제목", START_DATE_TIME, END_DATE_TIME);
+        Mission mission = new Mission("미션제목", START_DATE_TIME, DUE_DATE_TIME);
 
         MissionManager.applyIfApplicable(mission, user, TEST_DATE_TIME);
 
@@ -42,9 +42,9 @@ class MissionManagerTest {
     @Test
     void applyFail2() {
         User user = new User("이름", "이메일주소");
-        Mission mission = new Mission("미션제목", START_DATE_TIME, END_DATE_TIME);
+        Mission mission = new Mission("미션제목", START_DATE_TIME, DUE_DATE_TIME);
 
-        assertThatThrownBy(() -> MissionManager.applyIfApplicable(mission, user, END_DATE_TIME))
+        assertThatThrownBy(() -> MissionManager.applyIfApplicable(mission, user, DUE_DATE_TIME))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 }

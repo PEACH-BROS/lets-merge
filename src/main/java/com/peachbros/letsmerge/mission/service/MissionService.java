@@ -5,6 +5,7 @@ import com.peachbros.letsmerge.mission.model.domain.Mission;
 import com.peachbros.letsmerge.mission.model.repository.MissionRepository;
 import com.peachbros.letsmerge.mission.service.dto.MissionCreateRequest;
 import com.peachbros.letsmerge.mission.service.dto.MissionResponse;
+import com.peachbros.letsmerge.mission.service.dto.MissionUpdateRequest;
 import com.peachbros.letsmerge.mission.service.dto.MissionsResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,6 +31,10 @@ public class MissionService {
     public MissionsResponse showMissions() {
         List<Mission> missions = missionRepository.findAll();
         return MissionsResponse.of(missions);
+    }
+
+    public void updateMission(MissionUpdateRequest missionUpdateRequest) {
+
     }
 
     @Transactional

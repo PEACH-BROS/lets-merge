@@ -3,6 +3,7 @@ package com.peachbros.letsmerge.mission.acceptance;
 import com.peachbros.letsmerge.core.dto.StandardResponse;
 import com.peachbros.letsmerge.mission.model.repository.MissionRepository;
 import com.peachbros.letsmerge.mission.service.dto.MissionCreateRequest;
+import com.peachbros.letsmerge.mission.service.dto.MissionUpdateRequest;
 import com.peachbros.letsmerge.mission.service.dto.MissionsResponse;
 import io.restassured.RestAssured;
 import io.restassured.mapper.TypeRef;
@@ -24,7 +25,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class MissionAcceptanceTest {
     public static final String MISSION_NAME = "체스 미션";
     public static final LocalDateTime START_DATE_TIME = LocalDateTime.of(2020, 5, 5, 0, 0, 0);
-    public static final LocalDateTime END_DATE_TIME = LocalDateTime.of(2020, 5, 12, 0, 0, 0);
+    public static final LocalDateTime DUE_DATE_TIME = LocalDateTime.of(2020, 5, 12, 0, 0, 0);
 
     @LocalServerPort
     private int port;
@@ -48,8 +49,8 @@ public class MissionAcceptanceTest {
 
     @Test
     void missionsTest() {
-        MissionCreateRequest missionCreateRequest1 = new MissionCreateRequest(MISSION_NAME, START_DATE_TIME, END_DATE_TIME);
-        MissionCreateRequest missionCreateRequest2 = new MissionCreateRequest(MISSION_NAME, START_DATE_TIME, END_DATE_TIME);
+        MissionCreateRequest missionCreateRequest1 = new MissionCreateRequest(MISSION_NAME, START_DATE_TIME, DUE_DATE_TIME);
+        MissionCreateRequest missionCreateRequest2 = new MissionCreateRequest(MISSION_NAME, START_DATE_TIME, DUE_DATE_TIME);
 
         //미션 추가
         addMission(missionCreateRequest1);
@@ -58,6 +59,8 @@ public class MissionAcceptanceTest {
         //미션 조회
         MissionsResponse missionsResponse = showMissions();
         assertThat(missionsResponse.getMissions()).hasSize(2);
+
+        //미션 수정
 
         //미션 삭제
         deleteMission(missionsResponse.getMissions().get(0).getId());
@@ -86,6 +89,17 @@ public class MissionAcceptanceTest {
                 .extract().as(new TypeRef<StandardResponse<MissionsResponse>>() {
                 });
         return response.getData();
+    }
+
+    private void updateMission(MissionUpdateRequest missionUpdateRequest) {
+        given()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(missionUpdateRequest)
+                .when()
+                .patch("/admin/missions/" + missionUpdateRequest.getId())
+                .then()
+                .statusCode(HttpStatus.OK.value())
+                .log().all();
     }
 
     private void deleteMission(Long missionId) {

@@ -10,6 +10,7 @@ import com.peachbros.letsmerge.mission.model.domain.Mission;
 import com.peachbros.letsmerge.mission.service.MissionService;
 import com.peachbros.letsmerge.mission.service.dto.MissionCreateRequest;
 import com.peachbros.letsmerge.mission.service.dto.MissionResponse;
+import com.peachbros.letsmerge.mission.service.dto.MissionUpdateRequest;
 import com.peachbros.letsmerge.mission.service.dto.MissionsResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -55,7 +56,7 @@ class MissionControllerTest {
 
     @Test
     void addMission() throws Exception {
-        MissionCreateRequest request = new MissionCreateRequest(MISSION_NAME, START_DATE_TIME, END_DATE_TIME);
+        MissionCreateRequest request = new MissionCreateRequest(MISSION_NAME, START_DATE_TIME, DUE_DATE_TIME);
         Mission mission = request.toMission();
         String missionCreateRequestData = objectMapper.writeValueAsString(request);
         when(missionService.addMission(any())).thenReturn(MissionResponse.of(mission));
@@ -68,7 +69,6 @@ class MissionControllerTest {
                 .andDo(print());
     }
 
-
     @Test
     void showMissions() throws Exception {
         List<Mission> missions = Arrays.asList(mockMission(), mockMission(), mockMission());
@@ -76,7 +76,7 @@ class MissionControllerTest {
         when(missionService.showMissions()).thenReturn(MissionsResponse.of(missions));
 
         MvcResult mvcResult = this.mockMvc.perform(get("/admin/missions")
-                .accept(MediaType.APPLICATION_JSON))
+                .accept(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andReturn();
@@ -85,6 +85,23 @@ class MissionControllerTest {
                 readValue(mvcResult.getResponse().getContentAsString(), new TypeReference<StandardResponse<MissionsResponse>>() {
                 });
         assertThat(missionsResponse.getData().getMissions()).hasSize(missions.size());
+    }
+
+    @Test
+    void updateMission() throws Exception {
+        MissionUpdateRequest missionUpdateRequest = new MissionUpdateRequest(1L, "NEW " + MISSION_NAME, START_DATE_TIME, DUE_DATE_TIME);
+        String missionUpdateRequestData = objectMapper.writeValueAsString(missionUpdateRequest);
+
+        doNothing().when(missionService).updateMission(missionUpdateRequest);
+
+        this.mockMvc.perform(patch("/admin/missions/1")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(missionUpdateRequestData))
+                .andExpect(status().isOk())
+                .andDo(print());
+
+        verify(missionService).updateMission(missionUpdateRequest);
+
     }
 
     @Test
@@ -118,6 +135,6 @@ class MissionControllerTest {
     }
 
     private Mission mockMission() {
-        return new Mission(MISSION_NAME, START_DATE_TIME, END_DATE_TIME);
+        return new Mission(MISSION_NAME, START_DATE_TIME, DUE_DATE_TIME);
     }
 }
