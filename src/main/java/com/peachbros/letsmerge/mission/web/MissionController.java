@@ -4,6 +4,7 @@ import com.peachbros.letsmerge.core.dto.StandardResponse;
 import com.peachbros.letsmerge.mission.service.MissionService;
 import com.peachbros.letsmerge.mission.service.dto.MissionCreateRequest;
 import com.peachbros.letsmerge.mission.service.dto.MissionResponse;
+import com.peachbros.letsmerge.mission.service.dto.MissionUpdateRequest;
 import com.peachbros.letsmerge.mission.service.dto.MissionsResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +31,12 @@ public class MissionController {
     @GetMapping("/admin/missions")
     public StandardResponse<MissionsResponse> showMissions() {
         return StandardResponse.of(missionService.showMissions());
+    }
+
+    @PatchMapping("/admin/missions/{id}")
+    public StandardResponse<Void> updateMission(@PathVariable Long id, @RequestBody MissionUpdateRequest missionUpdateRequest) {
+        missionService.updateMission(id, missionUpdateRequest);
+        return StandardResponse.empty();
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
