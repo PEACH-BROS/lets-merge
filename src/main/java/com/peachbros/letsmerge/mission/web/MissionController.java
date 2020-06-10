@@ -14,6 +14,7 @@ import javax.validation.Valid;
 import java.net.URI;
 
 @RestController
+@RequestMapping("/admin/missions")
 public class MissionController {
     private MissionService missionService;
 
@@ -21,26 +22,26 @@ public class MissionController {
         this.missionService = missionService;
     }
 
-    @PostMapping("/admin/missions")
+    @PostMapping
     public ResponseEntity<Void> addMission(@RequestBody @Valid MissionCreateRequest request) {
         MissionResponse response = missionService.addMission(request);
         return ResponseEntity.created(URI.create("/admin/missions/" + response.getId())).build();
     }
 
     @ResponseStatus(HttpStatus.OK)
-    @GetMapping("/admin/missions")
+    @GetMapping
     public StandardResponse<MissionsResponse> showMissions() {
         return StandardResponse.of(missionService.showMissions());
     }
 
-    @PatchMapping("/admin/missions/{id}")
+    @PatchMapping("/{id}")
     public StandardResponse<Void> updateMission(@PathVariable Long id, @RequestBody MissionUpdateRequest missionUpdateRequest) {
         missionService.updateMission(id, missionUpdateRequest);
         return StandardResponse.empty();
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @DeleteMapping("/admin/missions/{id}")
+    @DeleteMapping("/{id}")
     public StandardResponse<Void> deleteMission(@PathVariable Long id) {
         missionService.deleteMission(id);
         return StandardResponse.empty();

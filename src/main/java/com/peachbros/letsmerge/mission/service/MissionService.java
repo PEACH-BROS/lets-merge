@@ -40,7 +40,6 @@ public class MissionService {
     public void updateMission(Long missionId, MissionUpdateRequest missionUpdateRequest) {
         Mission persistMission = findMissionById(missionId);
         persistMission.update(missionUpdateRequest.getName(), missionUpdateRequest.getStartDateTime(), missionUpdateRequest.getDueDateTime());
-
     }
 
     @Transactional
