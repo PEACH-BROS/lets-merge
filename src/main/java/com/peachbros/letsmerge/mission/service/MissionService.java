@@ -1,5 +1,6 @@
 package com.peachbros.letsmerge.mission.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.peachbros.letsmerge.core.exception.NoSuchValueException;
 import com.peachbros.letsmerge.mission.model.domain.Mission;
 import com.peachbros.letsmerge.mission.model.repository.MissionRepository;
@@ -14,6 +15,8 @@ import java.util.List;
 
 @Service
 public class MissionService {
+
+    private ObjectMapper mapper;
     private final MissionRepository missionRepository;
 
     public MissionService(MissionRepository missionRepository) {
@@ -33,14 +36,21 @@ public class MissionService {
         return MissionsResponse.of(missions);
     }
 
-    public void updateMission(MissionUpdateRequest missionUpdateRequest) {
+    @Transactional
+    public void updateMission(Long missionId, MissionUpdateRequest missionUpdateRequest) {
+        Mission persistMission = findMissionById(missionId);
+        persistMission.update(missionUpdateRequest.getName(), missionUpdateRequest.getStartDateTime(), missionUpdateRequest.getDueDateTime());
 
     }
 
     @Transactional
     public void deleteMission(Long missionId) {
-        Mission mission = missionRepository.findById(missionId)
-                .orElseThrow(() -> new NoSuchValueException("해당 미션을 찾을 수 없습니다."));
+        Mission mission = findMissionById(missionId);
         missionRepository.delete(mission);
+    }
+
+    private Mission findMissionById(Long id) {
+        return missionRepository.findById(id)
+                .orElseThrow(() -> new NoSuchValueException("해당 미션을 찾을 수 없습니다."));
     }
 }

@@ -91,12 +91,12 @@ public class MissionAcceptanceTest {
         return response.getData();
     }
 
-    private void updateMission(MissionUpdateRequest missionUpdateRequest) {
+    private void updateMission(Long missionId, MissionUpdateRequest missionUpdateRequest) {
         given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(missionUpdateRequest)
                 .when()
-                .patch("/admin/missions/" + missionUpdateRequest.getId())
+                .patch("/admin/missions/" + missionId)
                 .then()
                 .statusCode(HttpStatus.OK.value())
                 .log().all();

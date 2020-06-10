@@ -10,7 +10,6 @@ import com.peachbros.letsmerge.mission.model.domain.Mission;
 import com.peachbros.letsmerge.mission.service.MissionService;
 import com.peachbros.letsmerge.mission.service.dto.MissionCreateRequest;
 import com.peachbros.letsmerge.mission.service.dto.MissionResponse;
-import com.peachbros.letsmerge.mission.service.dto.MissionUpdateRequest;
 import com.peachbros.letsmerge.mission.service.dto.MissionsResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -85,23 +84,6 @@ class MissionControllerTest {
                 readValue(mvcResult.getResponse().getContentAsString(), new TypeReference<StandardResponse<MissionsResponse>>() {
                 });
         assertThat(missionsResponse.getData().getMissions()).hasSize(missions.size());
-    }
-
-    @Test
-    void updateMission() throws Exception {
-        MissionUpdateRequest missionUpdateRequest = new MissionUpdateRequest(1L, "NEW " + MISSION_NAME, START_DATE_TIME, DUE_DATE_TIME);
-        String missionUpdateRequestData = objectMapper.writeValueAsString(missionUpdateRequest);
-
-        doNothing().when(missionService).updateMission(missionUpdateRequest);
-
-        this.mockMvc.perform(patch("/admin/missions/1")
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .content(missionUpdateRequestData))
-                .andExpect(status().isOk())
-                .andDo(print());
-
-        verify(missionService).updateMission(missionUpdateRequest);
-
     }
 
     @Test

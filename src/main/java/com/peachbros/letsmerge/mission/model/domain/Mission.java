@@ -37,6 +37,20 @@ public class Mission {
         }
     }
 
+    public void update(String name, LocalDateTime startDateTime, LocalDateTime dueDateTime) {
+        if (name != null) {
+            this.name = name;
+        }
+        if (startDateTime != null) {
+            validateDateTime(startDateTime, this.dueDateTime);
+            this.startDateTime = startDateTime;
+        }
+        if (dueDateTime != null) {
+            validateDateTime(this.startDateTime, dueDateTime);
+            this.dueDateTime = dueDateTime;
+        }
+    }
+
     public boolean isActive(LocalDateTime now) {
         return startDateTime.isBefore(now) && dueDateTime.isAfter(now);
     }

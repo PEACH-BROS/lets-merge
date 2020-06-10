@@ -13,7 +13,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class MissionTest {
-
     private static final String MISSION_NAME = "미션";
     private static final LocalDateTime START_DATE_TIME = LocalDateTime.of(2020, 5, 1, 21, 0);
     private static final LocalDateTime DUE_DATE_TIME = LocalDateTime.of(2020, 5, 12, 21, 0);

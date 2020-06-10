@@ -5,6 +5,7 @@ import com.peachbros.letsmerge.mission.model.domain.Mission;
 import com.peachbros.letsmerge.mission.model.repository.MissionRepository;
 import com.peachbros.letsmerge.mission.service.dto.MissionCreateRequest;
 import com.peachbros.letsmerge.mission.service.dto.MissionResponse;
+import com.peachbros.letsmerge.mission.service.dto.MissionUpdateRequest;
 import com.peachbros.letsmerge.mission.service.dto.MissionsResponse;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
@@ -18,6 +19,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 @SpringBootTest
 class MissionServiceTest {
@@ -44,7 +46,7 @@ class MissionServiceTest {
         assertThat(missionResponse.getId()).isEqualTo(persistMission.getId());
     }
 
-    @DisplayName("미션 리스트 가져오기")
+    @DisplayName("미션 리스트 조회")
     @Test
     void showMissions() {
         List<Mission> missions = Arrays.asList(mockMission(), mockMission(), mockMission());
@@ -55,6 +57,24 @@ class MissionServiceTest {
         assertThat(missionResponses.getMissions()).hasSize(missions.size());
     }
 
+    @DisplayName("미션 업데이트")
+    @Test
+    void updateMission() {
+        Mission mission = mockMission();
+        Mission persistMission = missionRepository.save(mission);
+
+        MissionUpdateRequest missionUpdateRequest = new MissionUpdateRequest("updatedMissionName", null, null);
+        missionService.updateMission(persistMission.getId(), missionUpdateRequest);
+
+        Mission updatedMission = missionRepository.findById(persistMission.getId()).get();
+        assertAll(
+                () -> assertThat(updatedMission).isNotNull(),
+                () -> assertThat(updatedMission.getName()).isEqualTo(missionUpdateRequest.getName())
+        );
+
+    }
+
+    @DisplayName("미션 삭제")
     @Test
     void deleteMission() {
         Mission persistMission = missionRepository.save(mockMission());
