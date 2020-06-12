@@ -24,26 +24,11 @@
             </tr>
             </thead>
             <tbody>
-            <tr :key="mission.id" v-for="mission in missions">
-                <td class="px-5 py-5 bg-white text-sm">
-                    <p class="text-gray-900 whitespace-no-wrap">{{mission.id}}</p>
-                </td>
-                <td class="px-5 py-5 bg-white text-sm">
-                    <p class="text-gray-900 whitespace-no-wrap">{{mission.name}}</p>
-                </td>
-                <td class="px-5 py-5 bg-white text-sm">
-                    <p class="text-gray-900 whitespace-no-wrap">{{mission.isActive}}</p>
-                </td>
-                <td class="px-5 py-5 bg-white text-sm">
-                    <p class="text-gray-900 whitespace-no-wrap">{{mission.startDateTime}}</p>
-                </td>
-                <td class="px-5 py-5 bg-white text-sm">
-                    <p class="text-gray-900 whitespace-no-wrap">{{mission.dueDateTime}}</p>
-                </td>
-                <td class="px-5 py-5 bg-white text-sm">
-                    <p class="text-gray-900 whitespace-no-wrap">{{mission.memberCount}}</p>
-                </td>
-            </tr>
+            <MissionItem
+                    :key="mission.id"
+                    :mission="mission
+                "
+                    v-for="mission in missions"/>
             </tbody>
         </table>
     </div>
@@ -51,9 +36,13 @@
 
 <script>
     import {mapState} from 'vuex';
+    import MissionItem from "./MissionItem";
 
     export default {
         name: "MissionList",
+        components: {
+            MissionItem
+        },
         computed: {
             ...mapState('mission', ['missions']),
         },
