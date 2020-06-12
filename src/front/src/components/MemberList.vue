@@ -18,20 +18,11 @@
             </tr>
             </thead>
             <tbody>
-            <tr :key="member.id" v-for="member in members">
-                <td class="px-5 py-5 bg-white text-sm">
-                    <p class="text-gray-900 whitespace-no-wrap">{{member.id}}</p>
-                </td>
-                <td class="px-5 py-5 bg-white text-sm">
-                    <p class="text-gray-900 whitespace-no-wrap">{{member.name}}</p>
-                </td>
-                <td class="px-5 py-5 bg-white text-sm">
-                    <p class="text-gray-900 whitespace-no-wrap">{{member.email}}</p>
-                </td>
-                <td class="px-5 py-5 bg-white text-sm">
-                    <p class="text-gray-900 whitespace-no-wrap">{{member.profile}}</p>
-                </td>
-            </tr>
+            <MemberItem
+                    :key="member.id"
+                    :member="member"
+                    v-for="member in members"
+            />
             </tbody>
         </table>
     </div>
@@ -39,9 +30,13 @@
 
 <script>
     import {mapState} from 'vuex';
+    import MemberItem from "./MemberItem";
 
     export default {
         name: "memberList",
+        components: {
+            MemberItem
+        },
         computed: {
             ...mapState('member', ['members']),
         },

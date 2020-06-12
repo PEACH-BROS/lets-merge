@@ -26,8 +26,7 @@
             <tbody>
             <MissionItem
                     :key="mission.id"
-                    :mission="mission
-                "
+                    :mission="mission"
                     v-for="mission in missions"/>
             </tbody>
         </table>
@@ -41,12 +40,11 @@
     export default {
         name: "MissionList",
         components: {
-            MissionItem
+            MissionItem,
         },
         computed: {
             ...mapState('mission', ['missions']),
         },
-        methods: {}
     }
 </script>
 
