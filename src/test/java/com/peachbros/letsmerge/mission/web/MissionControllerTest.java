@@ -56,7 +56,7 @@ class MissionControllerTest {
 
     @Test
     void addMission() throws Exception {
-        MissionCreateRequest request = new MissionCreateRequest(MISSION_NAME, START_DATE_TIME, DUE_DATE_TIME);
+        MissionCreateRequest request = new MissionCreateRequest(MISSION_NAME, "2010-11-25 12:30:00", "2010-11-26 12:30:00");
         Mission mission = request.toMission();
         String missionCreateRequestData = objectMapper.writeValueAsString(request);
         when(missionService.addMission(any())).thenReturn(MissionResponse.of(mission));
