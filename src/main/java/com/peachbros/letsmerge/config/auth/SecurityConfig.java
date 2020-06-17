@@ -1,5 +1,6 @@
 package com.peachbros.letsmerge.config.auth;
 
+import com.peachbros.letsmerge.user.model.domain.Role;
 import com.peachbros.letsmerge.user.model.repository.CustomOAuth2UserService;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -17,16 +18,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .csrf().disable()
-                .headers().frameOptions().disable()
+                    .headers().frameOptions().disable()
                 .and()
                     .authorizeRequests()
-                    .anyRequest().permitAll()
-                .and()
-                    .logout()
-                        .logoutSuccessUrl("/")
+                        .antMatchers("/", "/css/**", "/images/**", "/js/**", "/h2-console/**").permitAll()
+                        .antMatchers("/admin/**").hasRole(Role.ADMIN.name())
+                        .anyRequest().authenticated()
                 .and()
                     .oauth2Login()
-                        .userInfoEndpoint()
-                            .userService(customOAuth2UserService);
+                    .defaultSuccessUrl("/")
+                .and()
+                    .logout()
+                    .logoutSuccessUrl("/")
+                .and()
+                    .oauth2Login()
+                    .userInfoEndpoint()
+                    .userService(customOAuth2UserService);
     }
 }

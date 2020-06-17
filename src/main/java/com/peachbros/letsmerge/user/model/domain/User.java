@@ -12,13 +12,54 @@ public class User {
     private String name;
     @Column(nullable = false)
     private String email;
+    @Column
+    private String picture;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Role role;
 
     protected User() {
     }
 
-    public User(String name, String email) {
+    public User(String name, String email, Role role) {
         this.name = name;
         this.email = email;
+        this.role = role;
+    }
+
+    public static User ofRoleUser(String name, String email) {
+        return new User(name, email, Role.USER);
+    }
+
+    public User update(String name, String picture) {
+        this.name = name;
+        this.picture = picture;
+
+        return this;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getPicture() {
+        return picture;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public String getRoleKey() {
+        return role.getKey();
     }
 
     @Override

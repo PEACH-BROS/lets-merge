@@ -1,5 +1,6 @@
 package com.peachbros.letsmerge.config.auth.dto;
 
+import com.peachbros.letsmerge.user.model.domain.Role;
 import com.peachbros.letsmerge.user.model.domain.User;
 
 import java.util.Map;
@@ -20,10 +21,10 @@ public class OAuthAttributes {
     }
 
     public static OAuthAttributes of(String registationId, String userNameAttributeName, Map<String, Object> attributes) {
-        return ofGoogle(userNameAttributeName, attributes);
+        return ofGithub(userNameAttributeName, attributes);
     }
 
-    private static OAuthAttributes ofGoogle(String userNameAttributeName, Map<String, Object> attributes) {
+    private static OAuthAttributes ofGithub(String userNameAttributeName, Map<String, Object> attributes) {
         return OAuthAttributes.builder()
                 .setName((String) attributes.get("name"))
                 .setEmail((String) attributes.get("email"))
@@ -38,7 +39,9 @@ public class OAuthAttributes {
     }
 
     public User toEntity() {
-        return new User(name, email);
+        System.out.println("email + " + email);
+        System.out.println("name + " + name);
+        return new User(name, email, Role.USER);
     }
 
     public Map<String, Object> getAttributes() {
@@ -59,5 +62,16 @@ public class OAuthAttributes {
 
     public String getPicture() {
         return picture;
+    }
+
+    @Override
+    public String toString() {
+        return "OAuthAttributes{" +
+                "attributes=" + attributes +
+                ", nameAttributeKey='" + nameAttributeKey + '\'' +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", picture='" + picture + '\'' +
+                '}';
     }
 }

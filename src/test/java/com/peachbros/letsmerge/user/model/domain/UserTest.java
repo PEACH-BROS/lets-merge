@@ -10,8 +10,8 @@ class UserTest {
     @DisplayName("동일한 유저인지 확인")
     @Test
     void testEquals() {
-        User user1 = new User("코일", "coyle@gmail.com");
-        User user2 = new User("코일", "coyle@gmail.com");
+        User user1 = User.ofRoleUser("코일", "coyle@gmail.com");
+        User user2 = User.ofRoleUser("코일", "coyle@gmail.com");
 
         assertThat(user1.equals(user2)).isTrue();
     }

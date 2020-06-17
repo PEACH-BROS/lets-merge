@@ -54,7 +54,7 @@ class MatcherTest {
     private Users createUsers(int size) {
         List<User> users = new ArrayList<>();
         for (int i = 0; i < size; i++) {
-            users.add(new User(String.valueOf(i), "dummy@gmail.com"));
+            users.add(User.ofRoleUser(String.valueOf(i), "dummy@gmail.com"));
         }
         return new Users(users);
     }

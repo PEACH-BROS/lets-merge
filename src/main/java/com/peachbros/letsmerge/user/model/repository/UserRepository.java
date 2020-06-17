@@ -1,7 +1,12 @@
 package com.peachbros.letsmerge.user.model.repository;
 
-import org.springframework.stereotype.Repository;
+import com.peachbros.letsmerge.user.model.domain.User;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-@Repository
-public interface UserRepository {
+import java.util.Optional;
+
+public interface UserRepository extends JpaRepository<User, Long> {
+
+    Optional<User> findByEmail(String email);
+
 }
