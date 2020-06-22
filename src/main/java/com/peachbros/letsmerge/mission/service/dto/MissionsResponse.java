@@ -11,7 +11,7 @@ public class MissionsResponse {
     private MissionsResponse() {
     }
 
-    public MissionsResponse(List<MissionResponse> missions) {
+    private MissionsResponse(List<MissionResponse> missions) {
         this.missions = missions;
     }
 

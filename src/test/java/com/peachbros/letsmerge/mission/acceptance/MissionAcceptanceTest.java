@@ -2,6 +2,7 @@ package com.peachbros.letsmerge.mission.acceptance;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.peachbros.letsmerge.core.dto.StandardResponse;
 import com.peachbros.letsmerge.core.exception.NoSuchValueException;
 import com.peachbros.letsmerge.mission.model.repository.MissionRepository;
@@ -14,7 +15,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -22,6 +22,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
+
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -37,11 +38,9 @@ public class MissionAcceptanceTest {
     public static final LocalDateTime START_DATE_TIME = LocalDateTime.of(2020, 5, 5, 0, 0, 0);
     public static final LocalDateTime DUE_DATE_TIME = LocalDateTime.of(2020, 5, 12, 0, 0, 0);
     public static final LocalDateTime NEW_DUE_DATE_TIME = LocalDateTime.of(2020, 5, 19, 0, 0, 0);
+    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     private MockMvc mvc;
-
-    @LocalServerPort
-    private int port;
 
     @Autowired
     private MissionRepository missionRepository;
@@ -55,6 +54,8 @@ public class MissionAcceptanceTest {
                 .addFilter(new CharacterEncodingFilter("UTF-8", true))
                 .apply(springSecurity())
                 .build();
+
+        OBJECT_MAPPER.registerModule(new JavaTimeModule());
     }
 
     @AfterEach
@@ -67,9 +68,6 @@ public class MissionAcceptanceTest {
     void missionsTest() throws Exception {
         MissionCreateRequest missionCreateRequest1 = new MissionCreateRequest(MISSION_NAME, "2010-11-25 12:30:00", "2010-11-26 12:30:00");
         MissionCreateRequest missionCreateRequest2 = new MissionCreateRequest(MISSION_NAME, "2010-11-25 12:30:00", "2010-11-26 12:30:00");
-
-//        MissionRequest missionCreateRequest1 = new MissionRequest("sadads", "21321", "@!32");
-//        MissionRequest missionCreateRequest2 = new MissionRequest("sadads", "21321", "@!32");
 
         //미션 추가
         addMission(missionCreateRequest1);
@@ -114,45 +112,26 @@ public class MissionAcceptanceTest {
                 .andDo(print())
                 .andReturn();
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        String contentAsString = mvcResult.getResponse().getContentAsString();
-        StandardResponse<MissionsResponse> response = objectMapper.readValue(contentAsString,
-                new TypeReference<StandardResponse<MissionsResponse>>() {
-                });
-        MissionsResponse data = response.getData();
-//        StandardResponse<MissionsResponse> response =
-//                objectMapper.readValue(mvcResult.getResponse().getContentAsString(),
-//                        objectMapper.getTypeFactory().constructType(StandardResponse.class, MissionResponse.class));
-//        StandardResponse<MissionsResponse> response = given()
-//                .accept(MediaType.APPLICATION_JSON_VALUE)
-//                .when()
-//                .get("/admin/missions")
-//                .then()
-//                .statusCode(HttpStatus.OK.value())
-//                .log().all()
-//                .extract().as(new TypeRef<StandardResponse<MissionsResponse>>() {
-////                });
-        return data;
+        String result = mvcResult.getResponse().getContentAsString();
+        StandardResponse<MissionsResponse> missionsResponseStandardResponse
+                = OBJECT_MAPPER.readValue(result, new TypeReference<StandardResponse<MissionsResponse>>() {
+        });
+        return missionsResponseStandardResponse.getData();
     }
 
-    private void updateMission(Long missionId, MissionUpdateRequest missionUpdateRequest) {
-//        given()
-//                .contentType(MediaType.APPLICATION_JSON_VALUE)
-//                .body(missionUpdateRequest)
-//                .when()
-//                .patch("/admin/missions/" + missionId)
-//                .then()
-//                .statusCode(HttpStatus.OK.value())
-//                .log().all();
+    private void updateMission(Long missionId, MissionUpdateRequest missionUpdateRequest) throws Exception {
+        mvc.perform(patch("/admin/missions/" + missionId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(OBJECT_MAPPER.writeValueAsString(missionUpdateRequest)))
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andReturn();
     }
 
-    private void deleteMission(Long missionId) {
-//        given()
-//                .when()
-//                .delete("/admin/missions/" + missionId)
-//                .then()
-//                .statusCode(HttpStatus.NO_CONTENT.value())
-//                .log().all();
+    private void deleteMission(Long missionId) throws Exception {
+        mvc.perform(delete("/admin/missions/" + missionId))
+                .andExpect(status().isNoContent())
+                .andDo(print());
     }
 
     private MissionResponse findMissionById(Long missionId, MissionsResponse missionsResponse) {
