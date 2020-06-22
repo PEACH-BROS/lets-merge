@@ -20,7 +20,7 @@ public class OAuthAttributes {
         this.picture = picture;
     }
 
-    public static OAuthAttributes of(String registationId, String userNameAttributeName, Map<String, Object> attributes) {
+    public static OAuthAttributes of(String userNameAttributeName, Map<String, Object> attributes) {
         return ofGithub(userNameAttributeName, attributes);
     }
 
@@ -39,8 +39,6 @@ public class OAuthAttributes {
     }
 
     public User toEntity() {
-        System.out.println("email + " + email);
-        System.out.println("name + " + name);
         return new User(name, email, Role.USER);
     }
 

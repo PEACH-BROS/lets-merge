@@ -10,9 +10,7 @@ public class User {
     private Long id;
     @Column(nullable = false)
     private String name;
-    @Column(nullable = false)
     private String email;
-    @Column
     private String picture;
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -31,8 +29,8 @@ public class User {
         return new User(name, email, Role.USER);
     }
 
-    public User update(String name, String picture) {
-        this.name = name;
+    public User update(String email, String picture) {
+        this.email = email;
         this.picture = picture;
 
         return this;
