@@ -39,7 +39,7 @@ public class OAuthAttributes {
     }
 
     public User toEntity() {
-        return new User(name, email, Role.USER);
+        return new User(name, email, picture, Role.USER);
     }
 
     public Map<String, Object> getAttributes() {
