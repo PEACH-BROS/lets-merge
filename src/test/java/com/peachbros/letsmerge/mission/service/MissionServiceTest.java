@@ -37,8 +37,8 @@ class MissionServiceTest {
     @DisplayName("미션 추가")
     @Test
     void addMission() {
-        MissionCreateRequest request = new MissionCreateRequest("MISSION_NAME", LocalDateTime.of(2020, 5, 24, 0, 0, 0),
-                LocalDateTime.of(2020, 5, 25, 0, 0, 0));
+        MissionCreateRequest request = new MissionCreateRequest("MISSION_NAME", "2010-11-25 12:30:00",
+                "2010-11-26 12:30:00");
 
         MissionResponse missionResponse = missionService.addMission(request);
         Mission persistMission = missionRepository.findAll().get(0);

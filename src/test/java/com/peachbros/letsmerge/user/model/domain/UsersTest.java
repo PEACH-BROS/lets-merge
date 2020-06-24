@@ -24,9 +24,9 @@ class UsersTest {
     @DisplayName("Users에 아이템 존재하는지 확인")
     @Test
     void contains() {
-        User user1 = new User("엘리", "elly@gmail.com");
-        User user2 = new User("코일", "coyle@gmail.com");
-        User user3 = new User("비밥", "bibab@gmail.com");
+        User user1 = User.ofRoleUser("엘리", "elly@gmail.com");
+        User user2 = User.ofRoleUser("코일", "coyle@gmail.com");
+        User user3 = User.ofRoleUser("비밥", "bibab@gmail.com");
 
         Users users = new Users(Arrays.asList(user1, user2, user3));
 
@@ -36,10 +36,10 @@ class UsersTest {
     @DisplayName("Users에 아이템 존재하는지 확인")
     @Test
     void notContains() {
-        User user1 = new User("엘리", "elly@gmail.com");
-        User user2 = new User("코일", "coyle@gmail.com");
-        User user3 = new User("비밥", "bibab@gmail.com");
-        User newUser = new User("?", "?@gmail.com");
+        User user1 = User.ofRoleUser("엘리", "elly@gmail.com");
+        User user2 = User.ofRoleUser("코일", "coyle@gmail.com");
+        User user3 = User.ofRoleUser("비밥", "bibab@gmail.com");
+        User newUser = User.ofRoleUser("?", "?@gmail.com");
 
         Users users = new Users(Arrays.asList(user1, user2, user3));
 

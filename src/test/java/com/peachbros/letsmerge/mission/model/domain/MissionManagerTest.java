@@ -18,7 +18,7 @@ class MissionManagerTest {
     @DisplayName("미션 신청 성공")
     @Test
     void applySuccess() {
-        User user = new User("이름", "이메일주소");
+        User user = User.ofRoleUser("이름", "이메일주소");
         Mission mission = new Mission("미션제목", START_DATE_TIME, DUE_DATE_TIME);
 
         MissionManager.applyIfApplicable(mission, user, TEST_DATE_TIME);
@@ -29,7 +29,7 @@ class MissionManagerTest {
     @DisplayName("미션 신청 실패 : 중복 신청")
     @Test
     void applyFail() {
-        User user = new User("이름", "이메일주소");
+        User user = User.ofRoleUser("이름", "이메일주소");
         Mission mission = new Mission("미션제목", START_DATE_TIME, DUE_DATE_TIME);
 
         MissionManager.applyIfApplicable(mission, user, TEST_DATE_TIME);
@@ -41,7 +41,7 @@ class MissionManagerTest {
     @DisplayName("미션 신청 실패 : 신청 기간 마감")
     @Test
     void applyFail2() {
-        User user = new User("이름", "이메일주소");
+        User user = User.ofRoleUser("이름", "이메일주소");
         Mission mission = new Mission("미션제목", START_DATE_TIME, DUE_DATE_TIME);
 
         assertThatThrownBy(() -> MissionManager.applyIfApplicable(mission, user, DUE_DATE_TIME))

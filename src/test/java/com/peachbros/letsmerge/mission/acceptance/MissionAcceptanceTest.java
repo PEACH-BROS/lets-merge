@@ -1,5 +1,8 @@
 package com.peachbros.letsmerge.mission.acceptance;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.peachbros.letsmerge.core.dto.StandardResponse;
 import com.peachbros.letsmerge.core.exception.NoSuchValueException;
 import com.peachbros.letsmerge.mission.model.repository.MissionRepository;
@@ -7,22 +10,27 @@ import com.peachbros.letsmerge.mission.service.dto.MissionCreateRequest;
 import com.peachbros.letsmerge.mission.service.dto.MissionResponse;
 import com.peachbros.letsmerge.mission.service.dto.MissionUpdateRequest;
 import com.peachbros.letsmerge.mission.service.dto.MissionsResponse;
-import io.restassured.RestAssured;
-import io.restassured.mapper.TypeRef;
-import io.restassured.specification.RequestSpecification;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.filter.CharacterEncodingFilter;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class MissionAcceptanceTest {
@@ -30,20 +38,24 @@ public class MissionAcceptanceTest {
     public static final LocalDateTime START_DATE_TIME = LocalDateTime.of(2020, 5, 5, 0, 0, 0);
     public static final LocalDateTime DUE_DATE_TIME = LocalDateTime.of(2020, 5, 12, 0, 0, 0);
     public static final LocalDateTime NEW_DUE_DATE_TIME = LocalDateTime.of(2020, 5, 19, 0, 0, 0);
+    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
-    @LocalServerPort
-    private int port;
+    private MockMvc mvc;
 
     @Autowired
     private MissionRepository missionRepository;
 
-    public static RequestSpecification given() {
-        return RestAssured.given().log().all();
-    }
+    @Autowired
+    private WebApplicationContext context;
 
     @BeforeEach
-    void setUp() {
-        RestAssured.port = port;
+    void setUpEach() {
+        mvc = MockMvcBuilders.webAppContextSetup(context)
+                .addFilter(new CharacterEncodingFilter("UTF-8", true))
+                .apply(springSecurity())
+                .build();
+
+        OBJECT_MAPPER.registerModule(new JavaTimeModule());
     }
 
     @AfterEach
@@ -52,9 +64,10 @@ public class MissionAcceptanceTest {
     }
 
     @Test
-    void missionsTest() {
-        MissionCreateRequest missionCreateRequest1 = new MissionCreateRequest(MISSION_NAME, START_DATE_TIME, DUE_DATE_TIME);
-        MissionCreateRequest missionCreateRequest2 = new MissionCreateRequest(MISSION_NAME, START_DATE_TIME, DUE_DATE_TIME);
+    @WithMockUser(roles = "ADMIN")
+    void missionsTest() throws Exception {
+        MissionCreateRequest missionCreateRequest1 = new MissionCreateRequest(MISSION_NAME, "2010-11-25 12:30:00", "2010-11-26 12:30:00");
+        MissionCreateRequest missionCreateRequest2 = new MissionCreateRequest(MISSION_NAME, "2010-11-25 12:30:00", "2010-11-26 12:30:00");
 
         //미션 추가
         addMission(missionCreateRequest1);
@@ -81,48 +94,44 @@ public class MissionAcceptanceTest {
         assertThat(showMissions().getMissions()).hasSize(1);
     }
 
-    private void addMission(MissionCreateRequest missionCreateRequest) {
-        given()
+    private void addMission(MissionCreateRequest missionCreateRequest) throws Exception {
+        ObjectMapper objectMapper = new ObjectMapper();
+        String s = objectMapper.writeValueAsString(missionCreateRequest);
+
+        mvc.perform(post("/admin/missions")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(missionCreateRequest)
-                .when()
-                .post("/admin/missions")
-                .then()
-                .statusCode(HttpStatus.CREATED.value())
-                .log().all();
+                .content(s))
+                .andExpect(status().isCreated())
+                .andDo(print());
     }
 
-    private MissionsResponse showMissions() {
-        StandardResponse<MissionsResponse> response = given()
-                .accept(MediaType.APPLICATION_JSON_VALUE)
-                .when()
-                .get("/admin/missions")
-                .then()
-                .statusCode(HttpStatus.OK.value())
-                .log().all()
-                .extract().as(new TypeRef<StandardResponse<MissionsResponse>>() {
-                });
-        return response.getData();
+    private MissionsResponse showMissions() throws Exception {
+        MvcResult mvcResult = mvc.perform(get("/admin/missions")
+                .accept(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andReturn();
+
+        String result = mvcResult.getResponse().getContentAsString();
+        StandardResponse<MissionsResponse> missionsResponseStandardResponse
+                = OBJECT_MAPPER.readValue(result, new TypeReference<StandardResponse<MissionsResponse>>() {
+        });
+        return missionsResponseStandardResponse.getData();
     }
 
-    private void updateMission(Long missionId, MissionUpdateRequest missionUpdateRequest) {
-        given()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(missionUpdateRequest)
-                .when()
-                .patch("/admin/missions/" + missionId)
-                .then()
-                .statusCode(HttpStatus.OK.value())
-                .log().all();
+    private void updateMission(Long missionId, MissionUpdateRequest missionUpdateRequest) throws Exception {
+        mvc.perform(patch("/admin/missions/" + missionId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(OBJECT_MAPPER.writeValueAsString(missionUpdateRequest)))
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andReturn();
     }
 
-    private void deleteMission(Long missionId) {
-        given()
-                .when()
-                .delete("/admin/missions/" + missionId)
-                .then()
-                .statusCode(HttpStatus.NO_CONTENT.value())
-                .log().all();
+    private void deleteMission(Long missionId) throws Exception {
+        mvc.perform(delete("/admin/missions/" + missionId))
+                .andExpect(status().isNoContent())
+                .andDo(print());
     }
 
     private MissionResponse findMissionById(Long missionId, MissionsResponse missionsResponse) {

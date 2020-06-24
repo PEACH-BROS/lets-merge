@@ -5,20 +5,62 @@ import java.util.Objects;
 
 @Entity
 public class User {
+    public static final String NO_PICTURE = "NO PICTURE";
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(nullable = false)
     private String name;
-    @Column(nullable = false)
     private String email;
+    private String picture;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Role role;
 
     protected User() {
     }
 
-    public User(String name, String email) {
+    public User(String name, String email, String picture, Role role) {
         this.name = name;
         this.email = email;
+        this.picture = picture;
+        this.role = role;
+    }
+
+    public static User ofRoleUser(String name, String email) {
+        return new User(name, email, NO_PICTURE, Role.USER);
+    }
+
+    public User update(String email, String picture) {
+        this.email = email;
+        this.picture = picture;
+
+        return this;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getPicture() {
+        return picture;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public String getRoleKey() {
+        return role.getKey();
     }
 
     @Override
