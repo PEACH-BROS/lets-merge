@@ -66,7 +66,7 @@ public class UserAcceptanceTest {
 
     @DisplayName("User 인수테스트")
     @Test
-    @WithMockUser("ADMIN")
+    @WithMockUser(roles = "ADMIN")
     void usersTest() throws Exception {
         /*
         우린 Github 로그인을 쓰고있는데 user를 Create할 이유가 있을까 ?

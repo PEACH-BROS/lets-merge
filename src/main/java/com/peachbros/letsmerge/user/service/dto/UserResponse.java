@@ -4,11 +4,14 @@ import com.peachbros.letsmerge.user.model.domain.Role;
 import com.peachbros.letsmerge.user.model.domain.User;
 
 public class UserResponse {
-    private final Long id;
-    private final String name;
-    private final String email;
-    private final String picture;
-    private final Role role;
+    private Long id;
+    private String name;
+    private String email;
+    private String picture;
+    private Role role;
+
+    private UserResponse() {
+    }
 
     private UserResponse(Long id, String name, String email, String picture, Role role) {
         this.id = id;
