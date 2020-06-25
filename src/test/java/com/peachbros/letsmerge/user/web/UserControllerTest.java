@@ -7,6 +7,7 @@ import com.peachbros.letsmerge.core.dto.StandardResponse;
 import com.peachbros.letsmerge.user.model.domain.Role;
 import com.peachbros.letsmerge.user.model.domain.User;
 import com.peachbros.letsmerge.user.service.UserService;
+import com.peachbros.letsmerge.user.service.dto.UserUpdateRequest;
 import com.peachbros.letsmerge.user.service.dto.UsersResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -27,8 +28,11 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -68,6 +72,23 @@ class UserControllerTest {
                 readValue(mvcResult.getResponse().getContentAsString(), new TypeReference<StandardResponse<UsersResponse>>() {
                 });
         assertThat(usersResponse.getData().getUsersResponse()).hasSize(users.size());
+    }
+
+    @DisplayName("User patch")
+    @Test
+    void updateUsers() throws Exception {
+        UserUpdateRequest userUpdateRequest = new UserUpdateRequest("NEW_EMAIL", "NEW_PICTURE");
+
+        doNothing().when(userService).updateUser(anyLong(), any());
+
+        int userId = 1;
+        this.mockMvc.perform(patch("/admin/api/v1/users/" + userId)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(objectMapper.writeValueAsString(userUpdateRequest)))
+                .andExpect(status().isNoContent())
+                .andDo(print());
+
+        verify(userService).updateUser(anyLong(), any());
     }
 
     private User mockUser() {

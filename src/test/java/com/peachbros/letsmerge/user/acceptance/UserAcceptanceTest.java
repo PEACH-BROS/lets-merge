@@ -82,7 +82,6 @@ public class UserAcceptanceTest {
         UserResponse userResponse = usersResponse.getUsersResponse().get(0);
         // 사용자 정보 Update
         UserUpdateRequest userUpdateRequest = new UserUpdateRequest(
-                UPDATED_TEST_USER_NAME,
                 UPDATED_TEST_USER_EMAIL,
                 ANOTHER_PICTURE);
 
@@ -90,7 +89,6 @@ public class UserAcceptanceTest {
         usersResponse = showUsers();
         UserResponse updatedUserResponse = usersResponse.getUsersResponse().get(0);
         assertAll(
-                () -> assertEquals(updatedUserResponse.getName(), UPDATED_TEST_USER_NAME),
                 () -> assertEquals(updatedUserResponse.getEmail(), UPDATED_TEST_USER_EMAIL),
                 () -> assertEquals(updatedUserResponse.getPicture(), ANOTHER_PICTURE)
         );
@@ -118,15 +116,15 @@ public class UserAcceptanceTest {
 
     private void updateUser(Long userId, UserUpdateRequest userUpdateRequest) throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.patch("/admin/api/v1/users/" + userId)
-                .content(MediaType.APPLICATION_JSON_VALUE)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(OBJECT_MAPPER.writeValueAsString(userUpdateRequest)))
-                .andExpect(status().isOk())
+                .andExpect(status().isNoContent())
                 .andDo(print());
     }
 
     private void deleteUser(Long userId) throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.delete("/admin/api/v1/users/" + userId))
-                .andExpect(status().isOk())
+                .andExpect(status().isNoContent())
                 .andDo(print());
     }
 }
