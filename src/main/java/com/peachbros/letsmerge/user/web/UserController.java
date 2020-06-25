@@ -28,4 +28,11 @@ public class UserController {
         userService.updateUser(id, userUpdateRequest);
         return StandardResponse.empty();
     }
+
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @DeleteMapping("/{id}")
+    public StandardResponse<Void> deleteUser(@PathVariable Long id) {
+        userService.deleteUser(id);
+        return StandardResponse.empty();
+    }
 }

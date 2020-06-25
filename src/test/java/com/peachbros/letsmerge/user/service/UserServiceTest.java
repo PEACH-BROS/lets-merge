@@ -54,6 +54,17 @@ class UserServiceTest {
         );
     }
 
+    @DisplayName("User 삭제")
+    @Test
+    void deleteUser() {
+        User persistUser = userRepository.save(mockUser());
+
+        assertThat(userRepository.findById(persistUser.getId())).isNotNull();
+
+        userService.deleteUser(persistUser.getId());
+        assertThat(userRepository.findById(persistUser.getId()).isPresent()).isFalse();
+    }
+
     private User mockUser() {
         return new User("name", "email@gmail.com", User.NO_PICTURE, Role.USER);
     }

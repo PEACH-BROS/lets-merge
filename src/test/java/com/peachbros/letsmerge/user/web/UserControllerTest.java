@@ -31,8 +31,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -76,7 +75,7 @@ class UserControllerTest {
 
     @DisplayName("User patch")
     @Test
-    void updateUsers() throws Exception {
+    void updateUser() throws Exception {
         UserUpdateRequest userUpdateRequest = new UserUpdateRequest("NEW_EMAIL", "NEW_PICTURE");
 
         doNothing().when(userService).updateUser(anyLong(), any());
@@ -89,6 +88,19 @@ class UserControllerTest {
                 .andDo(print());
 
         verify(userService).updateUser(anyLong(), any());
+    }
+
+    @DisplayName("User 삭제")
+    @Test
+    void deleteUser() throws Exception {
+        doNothing().when(userService).deleteUser(any());
+
+        int userId = 1;
+        this.mockMvc.perform(delete("/admin/api/v1/users/" + userId))
+                .andExpect(status().isNoContent())
+                .andDo(print());
+
+        verify(userService).deleteUser(any());
     }
 
     private User mockUser() {

@@ -12,7 +12,6 @@ import java.util.List;
 
 @Service
 public class UserService {
-
     private final UserRepository userRepository;
 
     public UserService(UserRepository userRepository) {
@@ -28,6 +27,11 @@ public class UserService {
     public void updateUser(Long userId, UserUpdateRequest userUpdateRequest) {
         User persistUser = findUserById(userId);
         persistUser.update(userUpdateRequest.getEmail(), userUpdateRequest.getPicture());
+    }
+
+    @Transactional
+    public void deleteUser(Long userId) {
+        userRepository.deleteById(userId);
     }
 
     private User findUserById(Long userId) {
