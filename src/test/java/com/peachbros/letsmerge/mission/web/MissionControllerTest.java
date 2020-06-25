@@ -2,6 +2,7 @@ package com.peachbros.letsmerge.mission.web;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.peachbros.letsmerge.config.auth.SecurityConfig;
 import com.peachbros.letsmerge.core.ErrorCode;
 import com.peachbros.letsmerge.core.dto.ErrorResponse;
 import com.peachbros.letsmerge.core.dto.StandardResponse;
@@ -16,8 +17,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -37,7 +40,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
+@WebMvcTest(value = MissionController.class, excludeFilters = {
+        @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = SecurityConfig.class)
+})
 class MissionControllerTest {
     @MockBean
     private MissionService missionService;
@@ -97,7 +102,7 @@ class MissionControllerTest {
         this.mockMvc.perform(patch("/admin/missions/1")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(missionUpdateRequestData))
-                .andExpect(status().isOk())
+                .andExpect(status().isNoContent())
                 .andDo(print());
 
         verify(missionService).updateMission(anyLong(), any());
