@@ -123,9 +123,8 @@ public class MissionAcceptanceTest {
         mvc.perform(patch("/admin/missions/" + missionId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(OBJECT_MAPPER.writeValueAsString(missionUpdateRequest)))
-                .andExpect(status().isOk())
-                .andDo(print())
-                .andReturn();
+                .andExpect(status().isNoContent())
+                .andDo(print());
     }
 
     private void deleteMission(Long missionId) throws Exception {

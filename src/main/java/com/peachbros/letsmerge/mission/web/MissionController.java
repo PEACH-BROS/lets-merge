@@ -34,6 +34,7 @@ public class MissionController {
         return StandardResponse.of(missionService.showMissions());
     }
 
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @PatchMapping("/{id}")
     public StandardResponse<Void> updateMission(@PathVariable Long id, @RequestBody MissionUpdateRequest missionUpdateRequest) {
         missionService.updateMission(id, missionUpdateRequest);
