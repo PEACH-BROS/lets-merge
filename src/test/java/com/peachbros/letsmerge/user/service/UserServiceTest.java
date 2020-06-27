@@ -5,6 +5,7 @@ import com.peachbros.letsmerge.user.model.domain.User;
 import com.peachbros.letsmerge.user.model.repository.UserRepository;
 import com.peachbros.letsmerge.user.service.dto.UserUpdateRequest;
 import com.peachbros.letsmerge.user.service.dto.UsersResponse;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,11 @@ class UserServiceTest {
 
     @Autowired
     private UserService userService;
+
+    @AfterEach
+    private void deleteAll() {
+        userRepository.deleteAll();
+    }
 
     @DisplayName("Users 조회")
     @Test
