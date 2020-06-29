@@ -22,12 +22,12 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 @SpringBootTest
-class MissionServiceTest {
+class AdminMissionServiceTest {
     @Autowired
     private MissionRepository missionRepository;
 
     @Autowired
-    private MissionService missionService;
+    private AdminMissionService adminMissionService;
 
     @AfterEach
     void afterEach() {
@@ -40,7 +40,7 @@ class MissionServiceTest {
         MissionCreateRequest request = new MissionCreateRequest("MISSION_NAME", "2010-11-25 12:30:00",
                 "2010-11-26 12:30:00");
 
-        MissionResponse missionResponse = missionService.addMission(request);
+        MissionResponse missionResponse = adminMissionService.addMission(request);
         Mission persistMission = missionRepository.findAll().get(0);
 
         assertThat(missionResponse.getId()).isEqualTo(persistMission.getId());
@@ -52,7 +52,7 @@ class MissionServiceTest {
         List<Mission> missions = Arrays.asList(mockMission(), mockMission(), mockMission());
         missionRepository.saveAll(missions);
 
-        MissionsResponse missionResponses = missionService.showMissions();
+        MissionsResponse missionResponses = adminMissionService.showMissions();
 
         assertThat(missionResponses.getMissions()).hasSize(missions.size());
     }
@@ -64,7 +64,7 @@ class MissionServiceTest {
         Mission persistMission = missionRepository.save(mission);
 
         MissionUpdateRequest missionUpdateRequest = new MissionUpdateRequest("updatedMissionName", null, null);
-        missionService.updateMission(persistMission.getId(), missionUpdateRequest);
+        adminMissionService.updateMission(persistMission.getId(), missionUpdateRequest);
 
         Mission updatedMission = missionRepository.findById(persistMission.getId()).get();
         assertAll(
@@ -81,14 +81,14 @@ class MissionServiceTest {
 
         assertThat(missionRepository.findAll()).isNotEmpty();
 
-        missionService.deleteMission(persistMission.getId());
+        adminMissionService.deleteMission(persistMission.getId());
         assertThat(missionRepository.findAll()).isEmpty();
     }
 
     @DisplayName("미션 삭제 예외상황 : 삭제할 미션이 없는 경우")
     @Test
     void deleteMissionException1() {
-        assertThatThrownBy(() -> missionService.deleteMission(1L))
+        assertThatThrownBy(() -> adminMissionService.deleteMission(1L))
                 .isInstanceOf(NoSuchValueException.class);
     }
 

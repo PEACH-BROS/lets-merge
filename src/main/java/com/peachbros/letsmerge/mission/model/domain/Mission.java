@@ -12,16 +12,23 @@ public class Mission {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Column(nullable = false)
     private String name;
+
     @Column(nullable = false)
     private LocalDateTime startDateTime;
+
     @Column(nullable = false)
     private LocalDateTime dueDateTime;
-    @OneToMany
+
+    @ManyToMany
+    @JoinTable(name = "MISSION_USER",
+            joinColumns = @JoinColumn(name = "MISSION_ID"),
+            inverseJoinColumns = @JoinColumn(name = "USER_ID"))
     private List<User> users = new ArrayList<>();
 
-    public Mission() {
+    protected Mission() {
     }
 
     public Mission(String name, LocalDateTime startDateTime, LocalDateTime dueDateTime) {
@@ -48,6 +55,16 @@ public class Mission {
         if (dueDateTime != null) {
             validateDateTime(this.startDateTime, dueDateTime);
             this.dueDateTime = dueDateTime;
+        }
+    }
+
+    public void addUser(User user) {
+        this.users.add(user);
+    }
+
+    public void removeUser(User user) {
+        if (this.users.contains(user)) {
+            this.users.remove(user);
         }
     }
 

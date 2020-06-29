@@ -1,20 +1,14 @@
 package com.peachbros.letsmerge.mission.web;
 
+import com.peachbros.letsmerge.config.auth.dto.SessionUser;
 import com.peachbros.letsmerge.core.dto.StandardResponse;
 import com.peachbros.letsmerge.mission.service.MissionService;
-import com.peachbros.letsmerge.mission.service.dto.MissionCreateRequest;
-import com.peachbros.letsmerge.mission.service.dto.MissionResponse;
-import com.peachbros.letsmerge.mission.service.dto.MissionUpdateRequest;
 import com.peachbros.letsmerge.mission.service.dto.MissionsResponse;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
-import java.net.URI;
-
 @RestController
-@RequestMapping("/admin/missions")
+@RequestMapping("/")
 public class MissionController {
     private MissionService missionService;
 
@@ -22,29 +16,31 @@ public class MissionController {
         this.missionService = missionService;
     }
 
-    @PostMapping
-    public ResponseEntity<Void> addMission(@RequestBody @Valid MissionCreateRequest request) {
-        MissionResponse response = missionService.addMission(request);
-        return ResponseEntity.created(URI.create("/admin/missions/" + response.getId())).build();
+    //미션 신청
+    //TODO: 신청 취소는 자원 변경 요청. create같이 자원을 생성하는 요청이 아니라 둘이 충돌. 어떻게 하면 좋을까
+    @PostMapping("/api/v1/missions/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void assignMission(@LoginUser SessionUser user, @PathVariable(name = "id") Long missionId) {
+        missionService.assignMission(user, missionId);
     }
 
+    //미션 신청 취소
+    @DeleteMapping("/api/v1/missions/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void cancelMission(@LoginUser SessionUser user, @PathVariable(name = "id") Long missionId) {
+        missionService.cancelMission(user, missionId);
+    }
+
+    //신청한 미션 조회
+    @GetMapping("/api/v1/missions")
     @ResponseStatus(HttpStatus.OK)
-    @GetMapping
-    public StandardResponse<MissionsResponse> showMissions() {
-        return StandardResponse.of(missionService.showMissions());
+    public StandardResponse<MissionsResponse> getAssignedMissions() {
+        MissionsResponse missionsResponse = missionService.getAssignedMissions();
+        return StandardResponse.of(missionsResponse);
     }
 
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PatchMapping("/{id}")
-    public StandardResponse<Void> updateMission(@PathVariable Long id, @RequestBody MissionUpdateRequest missionUpdateRequest) {
-        missionService.updateMission(id, missionUpdateRequest);
-        return StandardResponse.empty();
-    }
-
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    @DeleteMapping("/{id}")
-    public StandardResponse<Void> deleteMission(@PathVariable Long id) {
-        missionService.deleteMission(id);
-        return StandardResponse.empty();
+    //신청 가능한 미션 조회
+    public StandardResponse<MissionsResponse> getAssignableMissions() {
+        MissionsResponse missionsResponse = missionService.getAssignableMissions();
     }
 }

@@ -1,6 +1,10 @@
 package com.peachbros.letsmerge.user.model.domain;
 
+import com.peachbros.letsmerge.mission.model.domain.Mission;
+
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -10,13 +14,20 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Column(nullable = false)
     private String name;
+
     private String email;
+
     private String picture;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role;
+
+    @ManyToMany(mappedBy = "MISSION_ID")
+    private List<Mission> assignedMissions = new ArrayList<>();
 
     protected User() {
     }

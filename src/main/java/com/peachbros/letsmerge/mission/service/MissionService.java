@@ -1,55 +1,55 @@
 package com.peachbros.letsmerge.mission.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.peachbros.letsmerge.config.auth.dto.SessionUser;
 import com.peachbros.letsmerge.core.exception.NoSuchValueException;
 import com.peachbros.letsmerge.mission.model.domain.Mission;
 import com.peachbros.letsmerge.mission.model.repository.MissionRepository;
-import com.peachbros.letsmerge.mission.service.dto.MissionCreateRequest;
-import com.peachbros.letsmerge.mission.service.dto.MissionResponse;
-import com.peachbros.letsmerge.mission.service.dto.MissionUpdateRequest;
 import com.peachbros.letsmerge.mission.service.dto.MissionsResponse;
+import com.peachbros.letsmerge.user.model.domain.User;
+import com.peachbros.letsmerge.user.model.repository.UserRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
 public class MissionService {
-
-    private ObjectMapper mapper;
     private final MissionRepository missionRepository;
+    private final UserRepository userRepository;
 
-    public MissionService(MissionRepository missionRepository) {
+    public MissionService(MissionRepository missionRepository, UserRepository userRepository) {
         this.missionRepository = missionRepository;
+        this.userRepository = userRepository;
     }
 
-    @Transactional
-    public MissionResponse addMission(MissionCreateRequest request) {
-        Mission mission = request.toMission();
-        Mission persistMission = missionRepository.save(mission);
-
-        return MissionResponse.of(persistMission);
+    public void assignMission(SessionUser user, Long missionId) {
+        User persistUser = findUser(user);
+        Mission mission = findMission(missionId);
+        mission.addUser(persistUser);
     }
 
-    public MissionsResponse showMissions() {
-        List<Mission> missions = missionRepository.findAll();
-        return MissionsResponse.of(missions);
+    public void cancelMission(SessionUser user, Long missionId) {
+        User persistUser = findUser(user);
+        Mission mission = findMission(missionId);
+        mission.removeUser(persistUser);
     }
 
-    @Transactional
-    public void updateMission(Long missionId, MissionUpdateRequest missionUpdateRequest) {
-        Mission persistMission = findMissionById(missionId);
-        persistMission.update(missionUpdateRequest.getName(), missionUpdateRequest.getStartDateTime(), missionUpdateRequest.getDueDateTime());
+    public MissionsResponse getAssignedMissions() {
+        List<Mission> assignedMissions = userRepository.findAssignedMissions();
+        return MissionsResponse.of(assignedMissions);
     }
 
-    @Transactional
-    public void deleteMission(Long missionId) {
-        Mission mission = findMissionById(missionId);
-        missionRepository.delete(mission);
+    public MissionsResponse getAssignableMissions() {
+        List<Mission> assignableMissions = userRepository.findAssignableMissions();
+        return MissionsResponse.of(assignableMissions);
     }
 
-    private Mission findMissionById(Long id) {
-        return missionRepository.findById(id)
-                .orElseThrow(() -> new NoSuchValueException("해당 미션을 찾을 수 없습니다."));
+    private User findUser(SessionUser user) {
+        return userRepository.findByName(user.getName())
+                .orElseThrow(() -> new NoSuchValueException("존재하지 않는 사용자입니다."));
+    }
+
+    private Mission findMission(Long missionId) {
+        return missionRepository.findById(missionId)
+                .orElseThrow(() -> new NoSuchValueException("존재하지 않는 미션입니다."));
     }
 }
