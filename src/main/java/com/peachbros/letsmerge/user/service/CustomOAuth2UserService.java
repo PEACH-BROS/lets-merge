@@ -1,7 +1,8 @@
-package com.peachbros.letsmerge.user.model.repository;
+package com.peachbros.letsmerge.user.service;
 
 import com.peachbros.letsmerge.config.auth.dto.OAuthAttributes;
 import com.peachbros.letsmerge.user.model.domain.User;
+import com.peachbros.letsmerge.user.model.repository.UserRepository;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;

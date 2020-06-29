@@ -1,7 +1,7 @@
 package com.peachbros.letsmerge.config.auth;
 
 import com.peachbros.letsmerge.user.model.domain.Role;
-import com.peachbros.letsmerge.user.model.repository.CustomOAuth2UserService;
+import com.peachbros.letsmerge.user.service.CustomOAuth2UserService;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
