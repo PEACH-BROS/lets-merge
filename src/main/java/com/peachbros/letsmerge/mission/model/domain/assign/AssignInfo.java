@@ -32,12 +32,22 @@ public class AssignInfo {
     protected AssignInfo() {
     }
 
-    public AssignInfo(User user, Mission mission) {
+    public AssignInfo(User user, Mission mission, AssignStatus assignStatus) {
         this.user = user;
         this.mission = mission;
-        this.assignStatus = AssignStatus.ASSIGN;
-        this.assignDateTime = LocalDateTime.now();
+        this.assignStatus = assignStatus;
+        if (this.assignDateTime == null) {
+            this.assignDateTime = LocalDateTime.now();
+        }
         this.updateDateTime = LocalDateTime.now();
+    }
+
+    public void setAssignStatus(AssignStatus assignStatus) {
+        this.assignStatus = assignStatus;
+    }
+
+    public void setUpdateDateTime(LocalDateTime updateDateTime) {
+        this.updateDateTime = updateDateTime;
     }
 
     public Long getId() {

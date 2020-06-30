@@ -1,9 +1,12 @@
 package com.peachbros.letsmerge.user.model.domain;
 
+import com.peachbros.letsmerge.core.exception.NoSuchValueException;
 import com.peachbros.letsmerge.mission.model.domain.Mission;
 import com.peachbros.letsmerge.mission.model.domain.assign.AssignInfo;
+import com.peachbros.letsmerge.mission.model.domain.assign.AssignStatus;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -59,8 +62,18 @@ public class User {
      * 근데 얘를 이렇게 연관관계의 주인이 아닌 곳에서 만드는 행위는 올바를까?
      */
     public void assignMission(Mission mission) {
-        AssignInfo assignInfo = new AssignInfo(this, mission);
+        AssignInfo assignInfo = new AssignInfo(this, mission, AssignStatus.ASSIGN);
         assignedMissions.add(assignInfo);
+    }
+
+    public void cancelMission(Mission mission) {
+        AssignInfo assignInfo = assignedMissions.stream()
+                .filter(assignedMission -> Objects.equals(assignedMission.getId(), mission.getId()))
+                .findFirst()
+                .orElseThrow(() -> new NoSuchValueException("존재하지 않는 신청내역입니다."));
+
+        assignInfo.setAssignStatus(AssignStatus.CANCEL);
+        assignInfo.setUpdateDateTime(LocalDateTime.now());
     }
 
     public Long getId() {
