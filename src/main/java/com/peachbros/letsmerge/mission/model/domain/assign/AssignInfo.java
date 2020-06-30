@@ -31,4 +31,36 @@ public class AssignInfo {
 
     protected AssignInfo() {
     }
+
+    public AssignInfo(User user, Mission mission) {
+        this.user = user;
+        this.mission = mission;
+        this.assignStatus = AssignStatus.ASSIGN;
+        this.assignDateTime = LocalDateTime.now();
+        this.updateDateTime = LocalDateTime.now();
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public Mission getMission() {
+        return mission;
+    }
+
+    public AssignStatus getAssignStatus() {
+        return assignStatus;
+    }
+
+    public LocalDateTime getAssignDateTime() {
+        return assignDateTime;
+    }
+
+    public LocalDateTime getUpdateDateTime() {
+        return updateDateTime;
+    }
 }

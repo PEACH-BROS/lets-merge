@@ -1,6 +1,6 @@
 package com.peachbros.letsmerge.mission.model.domain;
 
-import com.peachbros.letsmerge.user.model.domain.User;
+import com.peachbros.letsmerge.mission.model.domain.assign.AssignInfo;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -16,17 +16,16 @@ public class Mission {
     @Column(nullable = false)
     private String name;
 
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false)
     private LocalDateTime startDateTime;
 
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false)
     private LocalDateTime dueDateTime;
 
-    @ManyToMany
-    @JoinTable(name = "MISSION_USER",
-            joinColumns = @JoinColumn(name = "MISSION_ID"),
-            inverseJoinColumns = @JoinColumn(name = "USER_ID"))
-    private List<User> users = new ArrayList<>();
+    @OneToMany(mappedBy = "mission")
+    private List<AssignInfo> assignedUsers = new ArrayList<>();
 
     protected Mission() {
     }
@@ -58,16 +57,6 @@ public class Mission {
         }
     }
 
-    public void addUser(User user) {
-        this.users.add(user);
-    }
-
-    public void removeUser(User user) {
-        if (this.users.contains(user)) {
-            this.users.remove(user);
-        }
-    }
-
     public boolean isActive(LocalDateTime now) {
         return startDateTime.isBefore(now) && dueDateTime.isAfter(now);
     }
@@ -90,9 +79,5 @@ public class Mission {
 
     public LocalDateTime getDueDateTime() {
         return dueDateTime;
-    }
-
-    public List<User> getUsers() {
-        return users;
     }
 }

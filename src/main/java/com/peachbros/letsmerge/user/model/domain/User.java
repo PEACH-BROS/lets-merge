@@ -1,11 +1,13 @@
 package com.peachbros.letsmerge.user.model.domain;
 
 import com.peachbros.letsmerge.mission.model.domain.Mission;
+import com.peachbros.letsmerge.mission.model.domain.assign.AssignInfo;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Entity
 public class User {
@@ -26,8 +28,8 @@ public class User {
     @Column(nullable = false)
     private Role role;
 
-    @ManyToMany(mappedBy = "MISSION_ID")
-    private List<Mission> assignedMissions = new ArrayList<>();
+    @OneToMany(mappedBy = "user")
+    private List<AssignInfo> assignedMissions = new ArrayList<>();
 
     protected User() {
     }
@@ -48,6 +50,17 @@ public class User {
         this.picture = picture;
 
         return this;
+    }
+
+    //미션 신청
+    /* TODO: User와 AssignInfo는 일대다 양방향 매핑 형태. AssignInfo는 연관관계의 주인.
+     * 그런데 AssignInfo의 생명주기는 항상 user 이후. user를 통해 생성/삭제됨.
+     * new AssignInfo() 이 부분에 연관관계의 주인에 값을 입력했다고 볼 수 있는걸까?
+     * 근데 얘를 이렇게 연관관계의 주인이 아닌 곳에서 만드는 행위는 올바를까?
+     */
+    public void assignMission(Mission mission) {
+        AssignInfo assignInfo = new AssignInfo(this, mission);
+        assignedMissions.add(assignInfo);
     }
 
     public Long getId() {
@@ -72,6 +85,12 @@ public class User {
 
     public String getRoleKey() {
         return role.getKey();
+    }
+
+    public List<Mission> getAssignedMissions() {
+        return assignedMissions.stream()
+                .map(AssignInfo::getMission)
+                .collect(Collectors.toList());
     }
 
     @Override
