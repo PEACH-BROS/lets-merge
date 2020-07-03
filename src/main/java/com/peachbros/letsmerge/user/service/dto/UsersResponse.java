@@ -15,15 +15,15 @@ public class UsersResponse {
         this.usersResponse = usersResponse;
     }
 
-    public List<UserResponse> getUsersResponse() {
-        return usersResponse;
-    }
-
     public static UsersResponse of(List<User> users) {
         List<UserResponse> userResponses = users.stream()
                 .map(UserResponse::of)
                 .collect(Collectors.toList());
 
         return new UsersResponse(userResponses);
+    }
+
+    public List<UserResponse> getUsersResponse() {
+        return usersResponse;
     }
 }

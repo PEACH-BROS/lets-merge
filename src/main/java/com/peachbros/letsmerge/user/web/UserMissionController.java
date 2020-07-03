@@ -1,5 +1,7 @@
 package com.peachbros.letsmerge.user.web;
 
+import com.peachbros.letsmerge.core.dto.StandardResponse;
+import com.peachbros.letsmerge.mission.service.dto.MissionsResponse;
 import com.peachbros.letsmerge.user.service.UserMissionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -28,13 +30,13 @@ public class UserMissionController {
         userMissionService.cancelMission(userId, missionId);
     }
 
-//    //신청한 미션 조회
-//    @GetMapping
-//    @ResponseStatus(HttpStatus.OK)
-//    public StandardResponse<MissionsResponse> getAssignedMissions() {
-//        MissionsResponse missionsResponse = missionService.getAssignedMissions();
-//        return StandardResponse.of(missionsResponse);
-//    }
+    //신청한 미션 조회
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    public StandardResponse<MissionsResponse> getAssignedMissions(@PathVariable("userId") Long userId) {
+        MissionsResponse missionsResponse = userMissionService.getAssignedMissions(userId);
+        return StandardResponse.of(missionsResponse);
+    }
 //
 //    //신청 가능한 미션 조회
 //    public StandardResponse<MissionsResponse> getAssignableMissions() {

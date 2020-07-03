@@ -42,14 +42,6 @@ public class AssignInfo {
         this.updateDateTime = LocalDateTime.now();
     }
 
-    public void setAssignStatus(AssignStatus assignStatus) {
-        this.assignStatus = assignStatus;
-    }
-
-    public void setUpdateDateTime(LocalDateTime updateDateTime) {
-        this.updateDateTime = updateDateTime;
-    }
-
     public Long getId() {
         return id;
     }
@@ -66,11 +58,19 @@ public class AssignInfo {
         return assignStatus;
     }
 
+    public void setAssignStatus(AssignStatus assignStatus) {
+        this.assignStatus = assignStatus;
+    }
+
     public LocalDateTime getAssignDateTime() {
         return assignDateTime;
     }
 
     public LocalDateTime getUpdateDateTime() {
         return updateDateTime;
+    }
+
+    public void setUpdateDateTime(LocalDateTime updateDateTime) {
+        this.updateDateTime = updateDateTime;
     }
 }

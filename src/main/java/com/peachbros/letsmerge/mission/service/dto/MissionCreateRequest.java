@@ -1,7 +1,6 @@
 package com.peachbros.letsmerge.mission.service.dto;
 
 import com.peachbros.letsmerge.mission.model.domain.Mission;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;

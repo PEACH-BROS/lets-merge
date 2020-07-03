@@ -4,9 +4,12 @@ import com.peachbros.letsmerge.config.auth.dto.SessionUser;
 import com.peachbros.letsmerge.core.exception.NoSuchValueException;
 import com.peachbros.letsmerge.mission.model.domain.Mission;
 import com.peachbros.letsmerge.mission.model.repository.MissionRepository;
+import com.peachbros.letsmerge.mission.service.dto.MissionsResponse;
 import com.peachbros.letsmerge.user.model.domain.User;
 import com.peachbros.letsmerge.user.model.repository.UserRepository;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class UserMissionService {
@@ -29,15 +32,17 @@ public class UserMissionService {
         Mission mission = findMission(missionId);
         persistUser.cancelMission(mission);
     }
-//
-//    public MissionsResponse getAssignedMissions() {
-//        List<Mission> assignedMissions = userRepository.findAssignedMissions();
-//        return MissionsResponse.of(assignedMissions);
-//    }
+
+    public MissionsResponse getAssignedMissions(Long userId) {
+        User persistUser = findUserById(userId);
+        List<Mission> assignedMissions = persistUser.getAssignedMissions();
+        return MissionsResponse.of(assignedMissions);
+    }
 //
 //    public MissionsResponse getAssignableMissions() {
 //        List<Mission> assignableMissions = userRepository.findAssignableMissions();
 //        return MissionsResponse.of(assignableMissions);
+
 //    }
 
     private User findUserById(Long userId) {
