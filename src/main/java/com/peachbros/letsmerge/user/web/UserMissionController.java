@@ -19,15 +19,17 @@ public class UserMissionController {
     //TODO: 신청 취소는 자원 변경 요청. create같이 자원을 생성하는 요청이 아니라 둘이 충돌. 어떻게 하면 좋을까
     @PostMapping("/{missionId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void assignMission(@PathVariable("userId") Long userId, @PathVariable("missionId") Long missionId) {
+    public StandardResponse<Void> assignMission(@PathVariable("userId") Long userId, @PathVariable("missionId") Long missionId) {
         userMissionService.assignMission(userId, missionId);
+        return StandardResponse.empty();
     }
 
     //미션 신청 취소
     @DeleteMapping("/{missionId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void cancelMission(@PathVariable("userId") Long userId, @PathVariable("missionId") Long missionId) {
+    public StandardResponse<Void> cancelMission(@PathVariable("userId") Long userId, @PathVariable("missionId") Long missionId) {
         userMissionService.cancelMission(userId, missionId);
+        return StandardResponse.empty();
     }
 
     //신청한 미션 조회
