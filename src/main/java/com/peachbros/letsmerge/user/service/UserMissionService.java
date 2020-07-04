@@ -1,6 +1,5 @@
 package com.peachbros.letsmerge.user.service;
 
-import com.peachbros.letsmerge.config.auth.dto.SessionUser;
 import com.peachbros.letsmerge.core.exception.NoSuchValueException;
 import com.peachbros.letsmerge.mission.model.domain.Mission;
 import com.peachbros.letsmerge.mission.model.repository.MissionRepository;
@@ -38,21 +37,20 @@ public class UserMissionService {
         List<Mission> assignedMissions = persistUser.getAssignedMissions();
         return MissionsResponse.of(assignedMissions);
     }
-//
-//    public MissionsResponse getAssignableMissions() {
-//        List<Mission> assignableMissions = userRepository.findAssignableMissions();
-//        return MissionsResponse.of(assignableMissions);
 
-//    }
+    public MissionsResponse getAssignableMissions(Long userId) {
+        User persistUser = findUserById(userId);
+
+        List<Mission> assignedMissions = persistUser.getAssignedMissions();
+        List<Mission> everyMission = missionRepository.findAll();
+
+        everyMission.removeAll(assignedMissions);
+        return MissionsResponse.of(everyMission);
+    }
 
     private User findUserById(Long userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new NoSuchValueException("해당 User를 찾을 수 없습니다. user.id = " + userId));
-    }
-
-    private User findUser(SessionUser user) {
-        return userRepository.findByName(user.getName())
-                .orElseThrow(() -> new NoSuchValueException("존재하지 않는 사용자입니다."));
     }
 
     private Mission findMission(Long missionId) {

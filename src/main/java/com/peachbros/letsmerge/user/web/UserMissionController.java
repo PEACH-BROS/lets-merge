@@ -31,16 +31,18 @@ public class UserMissionController {
     }
 
     //신청한 미션 조회
-    @GetMapping
+    @GetMapping("/assigned")
     @ResponseStatus(HttpStatus.OK)
     public StandardResponse<MissionsResponse> getAssignedMissions(@PathVariable("userId") Long userId) {
         MissionsResponse missionsResponse = userMissionService.getAssignedMissions(userId);
         return StandardResponse.of(missionsResponse);
     }
-//
-//    //신청 가능한 미션 조회
-//    public StandardResponse<MissionsResponse> getAssignableMissions() {
-//        MissionsResponse missionsResponse = missionService.getAssignableMissions();
-//    }
+
+    //신청 가능한 미션 조회
+    @GetMapping("/available")
+    public StandardResponse<MissionsResponse> getAssignableMissions(@PathVariable("userId") Long userId) {
+        MissionsResponse missionsResponse = userMissionService.getAssignableMissions(userId);
+        return StandardResponse.of(missionsResponse);
+    }
 
 }
