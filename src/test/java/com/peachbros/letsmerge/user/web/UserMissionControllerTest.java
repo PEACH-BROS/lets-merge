@@ -26,6 +26,7 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -87,11 +88,24 @@ class UserMissionControllerTest {
         StandardResponse<MissionsResponse> missionsResponse = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), new TypeReference<StandardResponse<MissionsResponse>>() {
         });
 
+        assertThat(missionsResponse.getData().getMissions()).hasSize(2);
         verify(userMissionService).getAssignedMissions(anyLong());
     }
 
     @Test
-    void getAssignableMissions() {
+    void getAssignableMissions() throws Exception {
+        when(userMissionService.getAssignableMissions(anyLong())).thenReturn(dummyMissionsResponse());
+        MvcResult mvcResult = this.mockMvc.perform(get("/api/v1/users/1/missions/assignable")
+                .accept(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andReturn();
+
+        StandardResponse<MissionsResponse> missionsResponse = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), new TypeReference<StandardResponse<MissionsResponse>>() {
+        });
+
+        assertThat(missionsResponse.getData().getMissions()).hasSize(2);
+        verify(userMissionService).getAssignableMissions(anyLong());
     }
 
     private MissionsResponse dummyMissionsResponse() {

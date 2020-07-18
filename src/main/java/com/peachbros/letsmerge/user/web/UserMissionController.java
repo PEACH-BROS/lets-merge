@@ -41,7 +41,7 @@ public class UserMissionController {
     }
 
     //신청 가능한 미션 조회
-    @GetMapping("/available")
+    @GetMapping("/assignable")
     public StandardResponse<MissionsResponse> getAssignableMissions(@PathVariable("userId") Long userId) {
         MissionsResponse missionsResponse = userMissionService.getAssignableMissions(userId);
         return StandardResponse.of(missionsResponse);
