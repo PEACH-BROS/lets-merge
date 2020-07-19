@@ -65,8 +65,12 @@ public class User {
                 .findFirst()
                 .orElseThrow(() -> new NoSuchValueException("존재하지 않는 신청내역입니다."));
 
+        //User에서는 assignInfo가 업데이트되고,
         assignInfo.setAssignStatus(AssignStatus.CANCEL);
         assignInfo.setUpdateDateTime(LocalDateTime.now());
+
+        //Mission에서는 assignInfo가 지워진다.
+        mission.removeAssignInfo(assignInfo);
     }
 
     public Long getId() {
@@ -95,6 +99,7 @@ public class User {
 
     public List<Mission> getAssignedMissions() {
         return assignedMissions.stream()
+                .filter(assignInfo -> Objects.equals(assignInfo.getAssignStatus(), AssignStatus.ASSIGN))
                 .map(AssignInfo::getMission)
                 .collect(Collectors.toList());
     }

@@ -61,13 +61,29 @@ class UserMissionServiceTest {
         //미션을 신청한다.
         userMissionService.assignMission(user.getId(), mission1.getId());
 
-        //신청  User의 신청한 미션 개수를 확인한다.
+        //신청 후 User의 신청한 미션 개수를 확인한다.
         MissionsResponse assignedMissions = userMissionService.getAssignedMissions(persistUser.getId());
         assertThat(assignedMissions.getMissions()).hasSize(1);
     }
 
+    @DisplayName("미션 신청을 취소한다.")
     @Test
     void cancelMission() {
+        //User가 미션을 신청한다.
+        User persistUser = userRepository.findById(user.getId()).get();
+        userMissionService.assignMission(user.getId(), mission1.getId());
+        userMissionService.assignMission(user.getId(), mission2.getId());
+
+        //User가 미션 신청을 취소한다.
+        userMissionService.cancelMission(persistUser.getId(), mission1.getId());
+
+        //신청한 미션 수를 센다.
+        MissionsResponse assignedMissions = userMissionService.getAssignedMissions(persistUser.getId());
+        assertThat(assignedMissions.getMissions()).hasSize(1);
+
+        //신청 가능한 미션의 수를 센다.
+        MissionsResponse assignableMissions = userMissionService.getAssignableMissions(persistUser.getId());
+        assertThat(assignableMissions.getMissions()).hasSize(2);
     }
 
     @AfterEach

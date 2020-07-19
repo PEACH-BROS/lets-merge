@@ -59,6 +59,10 @@ public class Mission {
         this.assignedUsers.add(assignInfo);
     }
 
+    public void removeAssignInfo(AssignInfo assignInfo) {
+        this.assignedUsers.remove(assignInfo);
+    }
+
     public boolean isActive(LocalDateTime now) {
         return startDateTime.isBefore(now) && dueDateTime.isAfter(now);
     }
