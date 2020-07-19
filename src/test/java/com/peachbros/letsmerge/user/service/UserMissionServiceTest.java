@@ -20,10 +20,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest
 class UserMissionServiceTest {
     @Autowired
-    private MissionRepository missionRepository;
+    private UserRepository userRepository;
 
     @Autowired
-    private UserRepository userRepository;
+    private MissionRepository missionRepository;
 
     @Autowired
     private UserMissionService userMissionService;
@@ -38,6 +38,9 @@ class UserMissionServiceTest {
 
     @BeforeEach
     void setUp() {
+        userRepository.deleteAll();
+        missionRepository.deleteAll();
+
         this.user = new User("엘리", "elly@gmail.com", "elly.png", Role.USER);
         this.mission1 = new Mission("미션1", LocalDateTime.of(2020, 5, 5, 0, 0), LocalDateTime.of(2020, 5, 12, 0, 0));
         this.mission2 = new Mission("미션2", LocalDateTime.of(2020, 5, 5, 0, 0), LocalDateTime.of(2020, 5, 12, 0, 0));

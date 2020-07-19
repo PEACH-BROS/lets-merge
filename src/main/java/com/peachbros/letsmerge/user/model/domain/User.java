@@ -61,7 +61,7 @@ public class User {
 
     public void cancelMission(Mission mission) {
         AssignInfo assignInfo = assignedMissions.stream()
-                .filter(assignedMission -> Objects.equals(assignedMission.getId(), mission.getId()))
+                .filter(info -> Objects.equals(info.getMission().getId(), mission.getId()))
                 .findFirst()
                 .orElseThrow(() -> new NoSuchValueException("존재하지 않는 신청내역입니다."));
 
