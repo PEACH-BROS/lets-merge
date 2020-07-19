@@ -31,7 +31,7 @@ public class User {
     @Column(nullable = false)
     private Role role;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<AssignInfo> assignedMissions = new ArrayList<>();
 
     protected User() {
@@ -55,15 +55,8 @@ public class User {
         return this;
     }
 
-    //미션 신청
-    /* TODO: User와 AssignInfo는 일대다 양방향 매핑 형태. AssignInfo는 연관관계의 주인.
-     * 그런데 AssignInfo의 생명주기는 항상 user 이후. user를 통해 생성/삭제됨.
-     * new AssignInfo() 이 부분에 연관관계의 주인에 값을 입력했다고 볼 수 있는걸까?
-     * 근데 얘를 이렇게 연관관계의 주인이 아닌 곳에서 만드는 행위는 올바를까?
-     */
-    public void assignMission(Mission mission) {
-        AssignInfo assignInfo = new AssignInfo(this, mission, AssignStatus.ASSIGN);
-        assignedMissions.add(assignInfo);
+    public void addAssignInfo(AssignInfo assignInfo) {
+        this.assignedMissions.add(assignInfo);
     }
 
     public void cancelMission(Mission mission) {
@@ -119,4 +112,5 @@ public class User {
     public int hashCode() {
         return Objects.hash(name, email);
     }
+
 }

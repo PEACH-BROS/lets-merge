@@ -16,15 +16,13 @@ public class Mission {
     @Column(nullable = false)
     private String name;
 
-    @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false)
     private LocalDateTime startDateTime;
 
-    @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false)
     private LocalDateTime dueDateTime;
 
-    @OneToMany(mappedBy = "mission")
+    @OneToMany(mappedBy = "mission", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<AssignInfo> assignedUsers = new ArrayList<>();
 
     protected Mission() {
@@ -55,6 +53,10 @@ public class Mission {
             validateDateTime(this.startDateTime, dueDateTime);
             this.dueDateTime = dueDateTime;
         }
+    }
+
+    public void addAssignInfo(AssignInfo assignInfo) {
+        this.assignedUsers.add(assignInfo);
     }
 
     public boolean isActive(LocalDateTime now) {

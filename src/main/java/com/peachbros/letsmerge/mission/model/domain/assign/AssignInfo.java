@@ -23,10 +23,8 @@ public class AssignInfo {
     @Enumerated(value = EnumType.STRING)
     private AssignStatus assignStatus;
 
-    @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime assignDateTime;
 
-    @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime updateDateTime;
 
     protected AssignInfo() {
