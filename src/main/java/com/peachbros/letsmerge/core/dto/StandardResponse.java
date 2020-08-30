@@ -24,7 +24,7 @@ public class StandardResponse<T> {
         return new StandardResponse<>(ErrorResponse.of(errorCode, errorMessage));
     }
 
-    public static <T> StandardResponse<T> empty() {
+    public static StandardResponse<Void> empty() {
         return new StandardResponse<>(null);
     }
 
