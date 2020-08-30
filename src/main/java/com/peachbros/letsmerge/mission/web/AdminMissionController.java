@@ -6,12 +6,12 @@ import com.peachbros.letsmerge.mission.service.dto.MissionCreateRequest;
 import com.peachbros.letsmerge.mission.service.dto.MissionResponse;
 import com.peachbros.letsmerge.mission.service.dto.MissionUpdateRequest;
 import com.peachbros.letsmerge.mission.service.dto.MissionsResponse;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.net.URI;
 
 @RestController
 @RequestMapping("/admin/missions")
@@ -22,10 +22,12 @@ public class AdminMissionController {
         this.adminMissionService = adminMissionService;
     }
 
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public ResponseEntity<Void> addMission(@RequestBody @Valid MissionCreateRequest request) {
-        MissionResponse response = adminMissionService.addMission(request);
-        return ResponseEntity.created(URI.create("/admin/missions/" + response.getId())).build();
+    public StandardResponse<Void> addMission(@RequestBody @Valid MissionCreateRequest request, HttpServletResponse response) {
+        MissionResponse missionResponse = adminMissionService.addMission(request);
+        response.setHeader(HttpHeaders.LOCATION, "/admin/missions/" + missionResponse.getId());
+        return StandardResponse.empty();
     }
 
     @ResponseStatus(HttpStatus.OK)
