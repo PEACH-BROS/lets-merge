@@ -5,6 +5,7 @@ import com.peachbros.letsmerge.user.model.domain.User;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Entity
 public class AssignInfo {
@@ -40,6 +41,14 @@ public class AssignInfo {
         this.updateDateTime = LocalDateTime.now();
     }
 
+    public boolean matches(Mission mission) {
+        return Objects.equals(this.getMission().getId(), mission.getId());
+    }
+
+    public boolean isAssigned() {
+        return this.assignStatus == AssignStatus.ASSIGN;
+    }
+
     public Long getId() {
         return id;
     }
@@ -56,8 +65,9 @@ public class AssignInfo {
         return assignStatus;
     }
 
-    public void setAssignStatus(AssignStatus assignStatus) {
-        this.assignStatus = assignStatus;
+    public void cancel() {
+        this.assignStatus = AssignStatus.CANCEL;
+        this.updateDateTime = LocalDateTime.now();
     }
 
     public LocalDateTime getAssignDateTime() {
@@ -66,9 +76,5 @@ public class AssignInfo {
 
     public LocalDateTime getUpdateDateTime() {
         return updateDateTime;
-    }
-
-    public void setUpdateDateTime(LocalDateTime updateDateTime) {
-        this.updateDateTime = updateDateTime;
     }
 }

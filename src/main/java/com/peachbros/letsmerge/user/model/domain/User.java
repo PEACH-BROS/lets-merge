@@ -3,10 +3,8 @@ package com.peachbros.letsmerge.user.model.domain;
 import com.peachbros.letsmerge.core.exception.NoSuchValueException;
 import com.peachbros.letsmerge.mission.model.domain.Mission;
 import com.peachbros.letsmerge.mission.model.domain.assign.AssignInfo;
-import com.peachbros.letsmerge.mission.model.domain.assign.AssignStatus;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -32,7 +30,7 @@ public class User {
     private Role role;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<AssignInfo> assignedMissions = new ArrayList<>();
+    private final List<AssignInfo> assignedMissions = new ArrayList<>();
 
     protected User() {
     }
@@ -60,14 +58,13 @@ public class User {
     }
 
     public void cancelMission(Mission mission) {
-        AssignInfo assignInfo = assignedMissions.stream()
-                .filter(info -> Objects.equals(info.getMission().getId(), mission.getId()))
+        AssignInfo assignInfo = this.assignedMissions.stream()
+                .filter(assignedMission -> assignedMission.matches(mission))
                 .findFirst()
                 .orElseThrow(() -> new NoSuchValueException("존재하지 않는 신청내역입니다."));
 
-        //User에서는 assignInfo가 업데이트되고,
-        assignInfo.setAssignStatus(AssignStatus.CANCEL);
-        assignInfo.setUpdateDateTime(LocalDateTime.now());
+        //User에서는 assignInfo가 cancel로 변경되고,
+        assignInfo.cancel();
 
         //Mission에서는 assignInfo가 지워진다.
         mission.removeAssignInfo(assignInfo);
@@ -99,7 +96,7 @@ public class User {
 
     public List<Mission> getAssignedMissions() {
         return assignedMissions.stream()
-                .filter(assignInfo -> Objects.equals(assignInfo.getAssignStatus(), AssignStatus.ASSIGN))
+                .filter(AssignInfo::isAssigned)
                 .map(AssignInfo::getMission)
                 .collect(Collectors.toList());
     }
