@@ -1,6 +1,5 @@
 package com.peachbros.letsmerge.mission.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.peachbros.letsmerge.core.exception.NoSuchValueException;
 import com.peachbros.letsmerge.mission.model.domain.Mission;
 import com.peachbros.letsmerge.mission.model.repository.MissionRepository;
@@ -17,7 +16,6 @@ import java.util.List;
 public class AdminMissionService {
 
     private final MissionRepository missionRepository;
-    private ObjectMapper mapper;
 
     public AdminMissionService(MissionRepository missionRepository) {
         this.missionRepository = missionRepository;
