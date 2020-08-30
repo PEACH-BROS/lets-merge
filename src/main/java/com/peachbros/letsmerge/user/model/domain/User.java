@@ -53,8 +53,8 @@ public class User {
         return this;
     }
 
-    public void addAssignInfo(AssignInfo assignInfo) {
-        this.assignedMissions.add(assignInfo);
+    public void assignMission(AssignInfo assignInfo) {
+        assignInfo.assign();
     }
 
     public void cancelMission(Mission mission) {
@@ -68,6 +68,10 @@ public class User {
 
         //Mission에서는 assignInfo가 지워진다.
         mission.removeAssignInfo(assignInfo);
+    }
+
+    public void addAssignInfo(AssignInfo assignInfo) {
+        this.assignedMissions.add(assignInfo);
     }
 
     public Long getId() {

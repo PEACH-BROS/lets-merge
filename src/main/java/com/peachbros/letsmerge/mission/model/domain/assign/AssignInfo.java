@@ -31,14 +31,18 @@ public class AssignInfo {
     protected AssignInfo() {
     }
 
-    public AssignInfo(User user, Mission mission, AssignStatus assignStatus) {
+    public AssignInfo(User user, Mission mission) {
         this.user = user;
         this.mission = mission;
-        this.assignStatus = assignStatus;
-        if (this.assignDateTime == null) {
-            this.assignDateTime = LocalDateTime.now();
-        }
+        this.assignStatus = AssignStatus.ASSIGN;
+        this.assignDateTime = LocalDateTime.now();
         this.updateDateTime = LocalDateTime.now();
+    }
+
+    //User-AssignInfo-Mission 연관관계 편의 메소드
+    public void assign() {
+        this.user.addAssignInfo(this);
+        this.mission.addAssignInfo(this);
     }
 
     public boolean matches(Mission mission) {

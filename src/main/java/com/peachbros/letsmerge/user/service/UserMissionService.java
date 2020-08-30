@@ -3,7 +3,7 @@ package com.peachbros.letsmerge.user.service;
 import com.peachbros.letsmerge.core.exception.NoSuchValueException;
 import com.peachbros.letsmerge.mission.model.domain.Mission;
 import com.peachbros.letsmerge.mission.model.domain.assign.AssignInfo;
-import com.peachbros.letsmerge.mission.model.domain.assign.AssignStatus;
+import com.peachbros.letsmerge.mission.model.repository.AssignInfoRepository;
 import com.peachbros.letsmerge.mission.model.repository.MissionRepository;
 import com.peachbros.letsmerge.mission.service.dto.MissionsResponse;
 import com.peachbros.letsmerge.user.model.domain.User;
@@ -12,25 +12,27 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class UserMissionService {
     private final MissionRepository missionRepository;
     private final UserRepository userRepository;
+    private final AssignInfoRepository assignInfoRepository;
 
-    public UserMissionService(MissionRepository missionRepository, UserRepository userRepository) {
+    public UserMissionService(MissionRepository missionRepository, UserRepository userRepository, AssignInfoRepository assignInfoRepository) {
         this.missionRepository = missionRepository;
         this.userRepository = userRepository;
+        this.assignInfoRepository = assignInfoRepository;
     }
 
     @Transactional
     public void assignMission(Long userId, Long missionId) {
         User persistUser = findUserById(userId);
         Mission persistMission = findMission(missionId);
-        AssignInfo assignInfo = new AssignInfo(persistUser, persistMission, AssignStatus.ASSIGN);
+        AssignInfo assignInfo = new AssignInfo(persistUser, persistMission);
 
-        persistUser.addAssignInfo(assignInfo);
-        persistMission.addAssignInfo(assignInfo);
+        persistUser.assignMission(assignInfo);
     }
 
     @Transactional
@@ -40,12 +42,10 @@ public class UserMissionService {
         persistUser.cancelMission(mission);
     }
 
-    @Transactional
     public MissionsResponse getAssignedMissions(Long userId) {
-        //TODO: User와 Mission을 조인해서 가져오는 조인 쿼리 작성
-        User persistUser = findUserById(userId);
-        List<Mission> assignedMissions = persistUser.getAssignedMissions();
-        return MissionsResponse.of(assignedMissions);
+        List<AssignInfo> assignedInfos = assignInfoRepository.findByUserId(userId);
+        List<Mission> missions = assignedInfos.stream().map(AssignInfo::getMission).collect(Collectors.toList());
+        return MissionsResponse.of(missions);
     }
 
     @Transactional
