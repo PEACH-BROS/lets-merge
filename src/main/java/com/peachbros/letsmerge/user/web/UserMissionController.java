@@ -16,7 +16,6 @@ public class UserMissionController {
     }
 
     //미션 신청
-    //TODO: 신청 취소는 자원 변경 요청. create같이 자원을 생성하는 요청이 아니라 둘이 충돌. 어떻게 하면 좋을까
     @PostMapping("/{missionId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public StandardResponse<Void> assignMission(@PathVariable("userId") Long userId, @PathVariable("missionId") Long missionId) {
