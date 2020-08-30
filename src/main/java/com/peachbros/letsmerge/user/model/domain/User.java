@@ -63,11 +63,7 @@ public class User {
                 .findFirst()
                 .orElseThrow(() -> new NoSuchValueException("존재하지 않는 신청내역입니다."));
 
-        //User에서는 assignInfo가 cancel로 변경되고,
         assignInfo.cancel();
-
-        //Mission에서는 assignInfo가 지워진다.
-        mission.removeAssignInfo(assignInfo);
     }
 
     public void addAssignInfo(AssignInfo assignInfo) {

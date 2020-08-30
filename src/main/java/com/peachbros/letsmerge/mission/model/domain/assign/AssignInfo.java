@@ -45,6 +45,12 @@ public class AssignInfo {
         this.mission.addAssignInfo(this);
     }
 
+    public void cancel() {
+        this.assignStatus = AssignStatus.CANCEL;
+        this.updateDateTime = LocalDateTime.now();
+        this.mission.removeAssignInfo(this);
+    }
+
     public boolean matches(Mission mission) {
         return Objects.equals(this.getMission().getId(), mission.getId());
     }
@@ -67,11 +73,6 @@ public class AssignInfo {
 
     public AssignStatus getAssignStatus() {
         return assignStatus;
-    }
-
-    public void cancel() {
-        this.assignStatus = AssignStatus.CANCEL;
-        this.updateDateTime = LocalDateTime.now();
     }
 
     public LocalDateTime getAssignDateTime() {
