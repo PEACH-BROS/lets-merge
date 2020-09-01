@@ -1,0 +1,35 @@
+version '0.0.1-SNAPSHOT'
+
+dependencies {
+    implementation project (":lets-merge-core")
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+}
+
+jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            element = 'CLASS'
+
+            limit {
+                counter = 'INSTRUCTION'
+                value = 'COVEREDRATIO'
+                minimum = 0.70
+            }
+
+            includes = ['*.domain.*']
+        }
+
+        rule {
+            element = 'METHOD'
+
+            limit {
+                counter = 'LINE'
+                value = 'TOTALCOUNT'
+                maximum = 22
+            }
+
+            includes = ['*.domain.*']
+        }
+
+    }
+}
