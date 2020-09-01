@@ -1,4 +1,4 @@
-# lets-merge-front-client
+# lets-merge
 
 ## Project setup
 ```
