@@ -10,7 +10,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/admin")
 public class AdminPageController {
-    private AdminMissionService adminMissionService;
+    private final AdminMissionService adminMissionService;
+
+    public AdminPageController(AdminMissionService adminMissionService) {
+        this.adminMissionService = adminMissionService;
+    }
 
     @GetMapping(produces = MediaType.TEXT_HTML_VALUE)
     public String adminIndex(Model model) {
