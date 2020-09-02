@@ -2,21 +2,25 @@
   <div class="mission-container">
     <div class="font-weight-bold text-h5 align-self-start">나의 미션</div>
     <MissionItem
-      v-for="mission in missions"
+      v-for="mission in assignedMissions"
       :key="mission.id"
       :mission="mission"
     />
 
-    <div class="font-weight-bold text-h5 align-self-start mt-16">모집 중인 미션</div>
+    <div class="font-weight-bold text-h5 align-self-start mt-16">
+      모집 중인 미션
+    </div>
     <MissionItem
-      v-for="mission in missions"
+      v-for="mission in openedMissions"
       :key="mission.id"
       :mission="mission"
     />
 
-    <div class="font-weight-bold text-h5 align-self-start mt-16">모집 완료된 미션</div>
+    <div class="font-weight-bold text-h5 align-self-start mt-16">
+      모집 완료된 미션
+    </div>
     <MissionItem
-      v-for="mission in missions"
+      v-for="mission in closedMissions"
       :key="mission.id"
       :mission="mission"
     />
@@ -31,9 +35,17 @@ export default {
   components: {
     MissionItem,
   },
+  created() {
+    //TODO: API 호출 직후에 하기
+    this.$store.commit("missions/SET_ASSIGNED_MISSIONS");
+    this.$store.commit("missions/SET_OPENED_MISSIONS");
+    this.$store.commit("missions/SET_CLOSED_MISSIONS");
+  },
   data() {
     return {
-      missions: this.$store.getters["missions/getMissions"]
+      assignedMissions: this.$store.getters["missions/getAssignedMissions"],
+      openedMissions: this.$store.getters["missions/getOpenedMissions"],
+      closedMissions: this.$store.getters["missions/getClosedMissions"],
     };
   },
 };
