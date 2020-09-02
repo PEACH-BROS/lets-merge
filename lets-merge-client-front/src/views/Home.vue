@@ -1,6 +1,6 @@
 <template>
   <div class="mission-container">
-    <div class="font-weight-bold text-h5 align-self-start">나의 미션</div>
+    <div class="font-weight-bold text-h5 align-self-start mt-16">나의 미션</div>
     <MissionItem
       v-for="mission in assignedMissions"
       :key="mission.id"
@@ -17,7 +17,7 @@
     />
 
     <div class="font-weight-bold text-h5 align-self-start mt-16">
-      모집 완료된 미션
+      종료된 미션
     </div>
     <MissionItem
       v-for="mission in closedMissions"
@@ -36,6 +36,7 @@ export default {
     MissionItem,
   },
   created() {
+    console.log("H3E")
     //TODO: API 호출 직후에 하기
     this.$store.commit("missions/SET_ASSIGNED_MISSIONS");
     this.$store.commit("missions/SET_OPENED_MISSIONS");
@@ -60,6 +61,6 @@ export default {
 }
 
 .mission-container * {
-  margin: 0;
+  margin: 0px;
 }
 </style>
