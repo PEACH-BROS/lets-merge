@@ -14,7 +14,7 @@
       :mission="mission"
     />
 
-    <div class="font-weight-bold text-h5 align-self-start mt-16">모집이 끝난 미션</div>
+    <div class="font-weight-bold text-h5 align-self-start mt-16">모집 완료된 미션</div>
     <MissionItem
       v-for="mission in missions"
       :key="mission.id"
@@ -24,7 +24,6 @@
 </template>
 
 <script>
-import mockMissions from "@/utils/mockMissions";
 import MissionItem from "@/views/MissionItem";
 
 export default {
@@ -34,7 +33,7 @@ export default {
   },
   data() {
     return {
-      missions: mockMissions.MISSIONS,
+      missions: this.$store.getters["missions/getMissions"]
     };
   },
 };

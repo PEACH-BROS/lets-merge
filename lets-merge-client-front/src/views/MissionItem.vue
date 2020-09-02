@@ -5,7 +5,29 @@
       {{ mission.startDateTime }}
       {{ mission.dueDateTime }}
     </span>
-    <v-btn depressed @click="assign">신청하기</v-btn>
+
+    <v-btn
+      v-if="mission.status === 'ASSIGNED'"
+      depressed
+      color="#82b3c9"
+      @click="cancel"
+    >
+      신청취소
+    </v-btn>
+    <v-btn
+      v-else-if="mission.status === 'ASSIGNABLE'"
+      depressed
+      color="#b3e5fc"
+      @click="assign"
+    >
+      신청하기
+    </v-btn>
+    <v-btn v-else-if="mission.status === 'NO_VACANCY'" depressed disabled>
+      정원초과
+    </v-btn>
+    <v-btn v-else-if="mission.status === 'CLOSED'" depressed disabled>
+      모집마감
+    </v-btn>
   </div>
 </template>
 
@@ -20,9 +42,12 @@ export default {
   },
   methods: {
     assign() {
-      alert("ASSIGNED");
-    }
-  }
+      alert("ASSIGN");
+    },
+    cancel() {
+      alert("CANCEL");
+    },
+  },
 };
 </script>
 
