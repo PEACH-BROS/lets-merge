@@ -5,13 +5,7 @@
       {{ mission.startDateTime }}
       {{ mission.dueDateTime }}
     </span>
-    <div v-if="assignable">
-    <v-btn v-if="isAssigned()" depressed @click="assign">신청하기</v-btn>
-    <v-btn v-else depressed disabled>신청불가</v-btn>
-    </div>
-    <div v-if="!assignable">
-      <v-btn depressed disabled>모집마감</v-btn>
-    </div>
+    <v-btn depressed @click="assign">신청하기</v-btn>
   </div>
 </template>
 
@@ -23,15 +17,8 @@ export default {
       type: Object,
       required: true,
     },
-    assignable: {
-      type: Boolean,
-      required: true,
-    },
   },
   methods: {
-    isAssigned() {
-      return this.mission.active === "Y";
-    },
     assign() {
       alert("ASSIGNED");
     }
