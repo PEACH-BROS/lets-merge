@@ -1,7 +1,6 @@
 package com.peachbros.letsmerge.matcher.model.domain;
 
-import com.peachbros.letsmerge.model.domain.model.domain.Matcher;
-import com.peachbros.letsmerge.model.domain.model.domain.strategy.ThreeMatchStrategy;
+import com.peachbros.letsmerge.matcher.model.domain.strategy.ThreeMatchStrategy;
 import com.peachbros.letsmerge.user.model.domain.Groups;
 import com.peachbros.letsmerge.user.model.domain.User;
 import com.peachbros.letsmerge.user.model.domain.Users;
