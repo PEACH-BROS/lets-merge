@@ -1,1 +1,5 @@
 rootProject.name = 'lets-merge'
+include 'lets-merge-client'
+include 'lets-merge-admin'
+include 'lets-merge-core'
+
