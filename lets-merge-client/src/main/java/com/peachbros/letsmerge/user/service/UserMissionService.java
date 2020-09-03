@@ -59,6 +59,11 @@ public class UserMissionService {
         return MissionsResponse.of(everyMission);
     }
 
+    public MissionsResponse getMissions() {
+        List<Mission> missions = missionRepository.findAll();
+        return MissionsResponse.of(missions);
+    }
+
     private User findUserById(Long userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new NoSuchValueException("해당 User를 찾을 수 없습니다. user.id = " + userId));

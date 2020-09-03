@@ -1,4 +1,5 @@
 import dayjs from "dayjs";
+import api from "@/api/mission";
 
 export default {
   namespaced: true,
@@ -80,6 +81,12 @@ export default {
     ],
   },
   mutations: {
+    SET_MISSIONS(state) {
+      state.missions = api.loadMissions();
+      this.SET_ASSIGNED_MISSIONS(state);
+      this.SET_OPENED_MISSIONS(state);
+      this.SET_CLOSED_MISSIONS(state);
+    },
     SET_ASSIGNED_MISSIONS(state) {
       state.assignedMissions = state.missions.filter(
         (mission) => mission.status === "ASSIGNED",

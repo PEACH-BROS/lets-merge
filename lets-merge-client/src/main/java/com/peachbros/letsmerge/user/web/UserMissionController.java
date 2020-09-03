@@ -46,4 +46,11 @@ public class UserMissionController {
         return StandardResponse.of(missionsResponse);
     }
 
+    //전체 미션 조회
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    public StandardResponse<MissionsResponse> getMissions(@PathVariable("userId") Long userId) {
+        MissionsResponse missionsResponse = userMissionService.getMissions();
+        return StandardResponse.of(missionsResponse);
+    }
 }

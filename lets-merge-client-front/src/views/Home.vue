@@ -36,11 +36,7 @@ export default {
     MissionItem,
   },
   created() {
-    console.log("Hdde3E")
-    //TODO: API 호출 직후에 하기
-    this.$store.commit("missions/SET_ASSIGNED_MISSIONS");
-    this.$store.commit("missions/SET_OPENED_MISSIONS");
-    this.$store.commit("missions/SET_CLOSED_MISSIONS");
+    this.$store.commit("missions/SET_MISSIONS");
   },
   data() {
     return {
