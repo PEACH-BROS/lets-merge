@@ -22,6 +22,7 @@ public class CommonControllerAdvice {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(RuntimeException.class)
     public StandardResponse<ErrorResponse> handleException(RuntimeException e) {
+        log.error(e.getMessage());
         return StandardResponse.error(ErrorCode.UNEXPECTED_EXCEPTION, e.getMessage());
     }
 
