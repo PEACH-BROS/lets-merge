@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import api from "@/api/mission";
 import { MISSION_STATUS } from "@/utils/constants";
 
@@ -81,6 +82,16 @@ export default {
     ],
   },
   mutations: {
+    CHANGE_DATE_TIME_FORMAT(state) {
+      state.missions.forEach((mission) => {
+        mission.startDateTime = dayjs(mission.startDateTime).format(
+          "YYYY.MM.DD HH:mm",
+        );
+        mission.dueDateTime = dayjs(mission.dueDateTime).format(
+          "YYYY.MM.DD HH:mm",
+        );
+      });
+    },
     SET_ASSIGNED_MISSIONS(state) {
       state.assignedMissions = state.missions.filter(
         (mission) =>
@@ -102,6 +113,7 @@ export default {
   actions: {
     async setMissions({ commit, state }) {
       state.missions = await api.loadMissions();
+      commit("CHANGE_DATE_TIME_FORMAT");
       commit("SET_ASSIGNED_MISSIONS");
       commit("SET_OPENED_MISSIONS");
       commit("SET_CLOSED_MISSIONS");

@@ -1,28 +1,31 @@
 <template>
   <div class="container">
-    <div class="font-weight-bold text-h5 align-self-start">나의 미션</div>
+    <div class="font-weight-bold text-h4 align-self-start">나의 미션</div>
     <MissionItem
       v-for="mission in assignedMissions"
       :key="mission.id"
       :mission="mission"
+      class="item"
     />
 
-    <div class="font-weight-bold text-h5 align-self-start mt-16">
+    <div class="font-weight-bold text-h4 align-self-start mt-16">
       모집 중인 미션
     </div>
     <MissionItem
       v-for="mission in openedMissions"
       :key="mission.id"
       :mission="mission"
+      class="item"
     />
 
-    <div class="font-weight-bold text-h5 align-self-start mt-16">
+    <div class="font-weight-bold text-h4 align-self-start mt-16">
       종료된 미션
     </div>
     <MissionItem
       v-for="mission in closedMissions"
       :key="mission.id"
       :mission="mission"
+      class="item"
     />
   </div>
 </template>
@@ -35,8 +38,9 @@ export default {
   components: {
     MissionItem,
   },
-  created() {
-    this.$store.dispatch("missions/setMissions");
+  async mounted() {
+    console.log("H")
+    await this.$store.dispatch("missions/setMissions");
   },
   data() {
     return {
@@ -61,5 +65,15 @@ export default {
 
 .container * {
   margin: 0;
+}
+
+.item {
+  margin-top: 20px;
+  padding: 10px;
+  padding-bottom: 90px;
+  overflow-y: hidden;
+  min-width: 330px;
+  box-shadow: 0 0 30px silver;
+  border-radius: 20px;
 }
 </style>
