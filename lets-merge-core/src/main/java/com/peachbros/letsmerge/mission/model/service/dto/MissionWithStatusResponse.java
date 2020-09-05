@@ -3,25 +3,43 @@ package com.peachbros.letsmerge.mission.model.service.dto;
 import com.peachbros.letsmerge.mission.model.domain.Mission;
 import com.peachbros.letsmerge.mission.model.domain.MissionStatus;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.time.LocalDateTime;
 
 public class MissionWithStatusResponse {
-    private Map<MissionResponse, String> missionWithStatus;
+    private Long id;
+    private String name;
+    private LocalDateTime startDateTime;
+    private LocalDateTime dueDateTime;
+    private String status;
 
     protected MissionWithStatusResponse() {
     }
 
-    private MissionWithStatusResponse(Map<MissionResponse, String> missionWithStatus) {
-        this.missionWithStatus = missionWithStatus;
+    public MissionWithStatusResponse(Mission mission, MissionStatus missionStatus) {
+        this.id = mission.getId();
+        this.name = mission.getName();
+        this.startDateTime = mission.getStartDateTime();
+        this.dueDateTime = mission.getDueDateTime();
+        this.status = missionStatus.getMessage();
     }
 
-    public static MissionWithStatusResponse of(Map<Mission, MissionStatus> missionWithStatus) {
-        Map<MissionResponse, String> dto = new HashMap<>();
-        for (Map.Entry<Mission, MissionStatus> entry : missionWithStatus.entrySet()) {
-            dto.put(MissionResponse.of(entry.getKey()), entry.getValue().getMessage());
-        }
-        return new MissionWithStatusResponse(dto);
+    public Long getId() {
+        return id;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public LocalDateTime getStartDateTime() {
+        return startDateTime;
+    }
+
+    public LocalDateTime getDueDateTime() {
+        return dueDateTime;
+    }
+
+    public String getStatus() {
+        return status;
+    }
 }

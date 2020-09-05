@@ -6,16 +6,16 @@ import com.peachbros.letsmerge.mission.model.domain.MissionStatus;
 import com.peachbros.letsmerge.mission.model.domain.assign.AssignInfo;
 import com.peachbros.letsmerge.mission.model.repository.AssignInfoRepository;
 import com.peachbros.letsmerge.mission.model.repository.MissionRepository;
+import com.peachbros.letsmerge.mission.model.service.dto.MissionWithStatusResponse;
 import com.peachbros.letsmerge.mission.model.service.dto.MissionsResponse;
 import com.peachbros.letsmerge.user.model.domain.User;
 import com.peachbros.letsmerge.user.model.repository.UserRepository;
-import com.peachbros.letsmerge.mission.model.service.dto.MissionWithStatusResponse;
+import com.peachbros.letsmerge.mission.model.service.dto.MissionsWithStatusResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -63,16 +63,18 @@ public class UserMissionService {
         return MissionsResponse.of(everyMission);
     }
 
-    public MissionWithStatusResponse getMissions(Long userId) {
+    @Transactional
+    public MissionsWithStatusResponse getMissions(Long userId) {
         List<Mission> missions = missionRepository.findAll();
 
-        Map<Mission, MissionStatus> missionWithStatus = new HashMap<>();
+        List<MissionWithStatusResponse> responses = new ArrayList<>();
 
+        //TODO: N+1 발생
         for (Mission mission : missions) {
             MissionStatus missionStatus = mission.findMissionStatus(userId);
-            missionWithStatus.put(mission, missionStatus);
+            responses.add(new MissionWithStatusResponse(mission, missionStatus));
         }
-        return MissionWithStatusResponse.of(missionWithStatus);
+        return MissionsWithStatusResponse.of(responses);
     }
 
     private User findUserById(Long userId) {
