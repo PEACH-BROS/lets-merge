@@ -36,7 +36,7 @@ export default {
     MissionItem,
   },
   created() {
-    this.$store.commit("missions/SET_MISSIONS");
+    this.$store.dispatch("missions/setMissions");
   },
   data() {
     return {

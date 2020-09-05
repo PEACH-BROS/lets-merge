@@ -1,5 +1,5 @@
-import dayjs from "dayjs";
 import api from "@/api/mission";
+import { MISSION_STATUS } from "@/utils/constants";
 
 export default {
   namespaced: true,
@@ -81,26 +81,30 @@ export default {
     ],
   },
   mutations: {
-    SET_MISSIONS(state) {
-      state.missions = api.loadMissions();
-      this.SET_ASSIGNED_MISSIONS(state);
-      this.SET_OPENED_MISSIONS(state);
-      this.SET_CLOSED_MISSIONS(state);
-    },
     SET_ASSIGNED_MISSIONS(state) {
       state.assignedMissions = state.missions.filter(
-        (mission) => mission.status === "ASSIGNED",
+        (mission) =>
+          mission.status === MISSION_STATUS.ASSIGNED ||
+          mission.status === MISSION_STATUS.SHOW_RESULT,
       );
     },
     SET_OPENED_MISSIONS(state) {
-      state.openedMissions = state.missions
-        .filter((mission) => mission.status !== "ASSIGNED")
-        .filter((mission) => dayjs(mission.dueDateTime).isAfter(dayjs()));
+      state.openedMissions = state.missions.filter(
+        (mission) => mission.status === MISSION_STATUS.ASSIGNABLE,
+      );
     },
     SET_CLOSED_MISSIONS(state) {
-      state.closedMissions = state.missions.filter((mission) =>
-        dayjs(mission.dueDateTime).isBefore(dayjs()),
+      state.closedMissions = state.missions.filter(
+        (mission) => mission.status === MISSION_STATUS.CLOSED,
       );
+    },
+  },
+  actions: {
+    async setMissions({ commit, state }) {
+      state.missions = await api.loadMissions();
+      commit("SET_ASSIGNED_MISSIONS");
+      commit("SET_OPENED_MISSIONS");
+      commit("SET_CLOSED_MISSIONS");
     },
   },
   getters: {
