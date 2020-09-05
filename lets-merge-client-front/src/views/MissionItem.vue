@@ -34,6 +34,8 @@
 </template>
 
 <script>
+import api from "@/api/mission";
+
 export default {
   name: "MissionItem",
   props: {
@@ -43,11 +45,13 @@ export default {
     },
   },
   methods: {
-    assign() {
-      alert("ASSIGN");
+    async assign() {
+      await api.assignMission(this.mission.id);
+      this.$store.commit("missions/ASSIGN_MISSION", this.mission.id);
     },
-    cancel() {
-      alert("CANCEL");
+    async cancel() {
+      await api.cancelMission(this.mission.id);
+      this.$store.commit("missions/CANCEL_MISSION", this.mission.id);
     },
   },
 };

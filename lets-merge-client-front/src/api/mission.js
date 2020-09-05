@@ -9,8 +9,12 @@ const client = axios.create({
 const api = (() => {
   const loadMissions = () =>
     client.get("").then((res) => res.data.data.missionWithStatusResponse);
+  const assignMission = (missionId) => client.post(`/${missionId}`);
+  const cancelMission = (missionId) => client.delete(`/${missionId}`);
   return {
     loadMissions,
+    assignMission,
+    cancelMission,
   };
 })();
 

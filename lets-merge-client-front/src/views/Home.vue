@@ -39,7 +39,6 @@ export default {
     MissionItem,
   },
   async mounted() {
-    console.log("H")
     await this.$store.dispatch("missions/setMissions");
   },
   data() {

@@ -8,78 +8,7 @@ export default {
     assignedMissions: [],
     openedMissions: [],
     closedMissions: [],
-    missions: [
-      {
-        id: 1,
-        name: "체스 미션",
-        startDateTime: "2020-09-02",
-        dueDateTime: "2021-09-02",
-        status: "ASSIGNED",
-      },
-      {
-        id: 2,
-        name: "블랙잭 미션",
-        startDateTime: "2020-09-02",
-        dueDateTime: "2021-09-02",
-        status: "ASSIGNABLE",
-      },
-      {
-        id: 3,
-        name: "자동차 미션",
-        startDateTime: "2020-09-02",
-        dueDateTime: "2021-09-02",
-        status: "NO_VACANCY",
-      },
-      {
-        id: 1,
-        name: "체스 미션",
-        startDateTime: "2020-09-02",
-        dueDateTime: "2021-09-02",
-        status: "ASSIGNED",
-      },
-      {
-        id: 2,
-        name: "블랙잭 미션",
-        startDateTime: "2020-09-02",
-        dueDateTime: "2021-09-02",
-        status: "ASSIGNABLE",
-      },
-      {
-        id: 3,
-        name: "자동차 미션",
-        startDateTime: "2020-09-02",
-        dueDateTime: "2021-09-02",
-        status: "NO_VACANCY",
-      },
-      {
-        id: 1,
-        name: "체스 미션",
-        startDateTime: "2020-09-02",
-        dueDateTime: "2021-09-02",
-        status: "ASSIGNED",
-      },
-      {
-        id: 2,
-        name: "블랙잭 미션",
-        startDateTime: "2020-09-02",
-        dueDateTime: "2021-09-02",
-        status: "ASSIGNABLE",
-      },
-      {
-        id: 3,
-        name: "자동차 미션",
-        startDateTime: "2020-09-02",
-        dueDateTime: "2021-09-02",
-        status: "NO_VACANCY",
-      },
-      {
-        id: 4,
-        name: "로또 미션",
-        startDateTime: "2020-09-02",
-        dueDateTime: "2019-09-02",
-        status: "CLOSED",
-      },
-    ],
+    missions: [],
   },
   mutations: {
     CHANGE_DATE_TIME_FORMAT(state) {
@@ -108,6 +37,16 @@ export default {
       state.closedMissions = state.missions.filter(
         (mission) => mission.status === MISSION_STATUS.CLOSED,
       );
+    },
+    ASSIGN_MISSION(state, missionId) {
+      const targetMissionIndex = state.openedMissions.findIndex(mission => mission.id === missionId);
+      const targetMission = state.openedMissions.splice(targetMissionIndex, 1);
+      state.assignedMissions.push(targetMission);
+    },
+    CANCEL_MISSION(state, missionId) {
+      const targetMissionIndex = state.assignedMissions.findIndex(mission => mission.id === missionId);
+      const targetMission = state.assignedMissions.splice(targetMissionIndex, 1);
+      state.openedMissions.push(targetMission);
     },
   },
   actions: {
