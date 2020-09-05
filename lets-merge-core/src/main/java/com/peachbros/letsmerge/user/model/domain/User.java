@@ -70,6 +70,10 @@ public class User {
         this.assignedMissions.add(assignInfo);
     }
 
+    public boolean isSameUserWith(Long userId) {
+        return this.id.equals(userId);
+    }
+
     public Long getId() {
         return id;
     }
