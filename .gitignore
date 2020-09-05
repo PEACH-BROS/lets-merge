@@ -33,3 +33,4 @@ out/
 
 ### github client id, secret id
 application-github.properties
+/lets-merge-core/src/main/resources/application-db.yml
