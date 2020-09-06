@@ -1,14 +1,13 @@
 package com.peachbros.letsmerge.user.web;
 
 import com.peachbros.letsmerge.common.dto.StandardResponse;
-import com.peachbros.letsmerge.mission.model.service.dto.MissionsWithStatusResponse;
 import com.peachbros.letsmerge.mission.model.service.dto.MissionsResponse;
+import com.peachbros.letsmerge.mission.model.service.dto.MissionsWithStatusResponse;
 import com.peachbros.letsmerge.user.service.UserMissionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@CrossOrigin("*")
 @RequestMapping("/api/v1/users/{userId}/missions")
 public class UserMissionController {
     private final UserMissionService userMissionService;
