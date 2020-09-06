@@ -8,9 +8,9 @@ import com.peachbros.letsmerge.mission.model.repository.AssignInfoRepository;
 import com.peachbros.letsmerge.mission.model.repository.MissionRepository;
 import com.peachbros.letsmerge.mission.model.service.dto.MissionWithStatusResponse;
 import com.peachbros.letsmerge.mission.model.service.dto.MissionsResponse;
+import com.peachbros.letsmerge.mission.model.service.dto.MissionsWithStatusResponse;
 import com.peachbros.letsmerge.user.model.domain.User;
 import com.peachbros.letsmerge.user.model.repository.UserRepository;
-import com.peachbros.letsmerge.mission.model.service.dto.MissionsWithStatusResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -63,9 +63,9 @@ public class UserMissionService {
         return MissionsResponse.of(everyMission);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public MissionsWithStatusResponse getMissions(Long userId) {
-        List<Mission> missions = missionRepository.findAll();
+        List<Mission> missions = missionRepository.findAllWithAssignInfo();
 
         List<MissionWithStatusResponse> responses = new ArrayList<>();
 
