@@ -24,7 +24,6 @@ public class AssignInfo {
     @Enumerated(value = EnumType.STRING)
     private AssignStatus assignStatus;
 
-    //TODO: EnableJpaAuditing
     private LocalDateTime assignDateTime;
 
     private LocalDateTime updateDateTime;

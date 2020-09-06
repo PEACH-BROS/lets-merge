@@ -69,7 +69,6 @@ public class UserMissionService {
 
         List<MissionWithStatusResponse> responses = new ArrayList<>();
 
-        //TODO: N+1 발생
         for (Mission mission : missions) {
             MissionStatus missionStatus = mission.findMissionStatus(userId);
             responses.add(new MissionWithStatusResponse(mission, missionStatus));
