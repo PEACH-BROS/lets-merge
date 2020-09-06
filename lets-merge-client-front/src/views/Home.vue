@@ -41,12 +41,16 @@ export default {
   async mounted() {
     await this.$store.dispatch("missions/setMissions");
   },
-  data() {
-    return {
-      assignedMissions: this.$store.getters["missions/getAssignedMissions"],
-      openedMissions: this.$store.getters["missions/getOpenedMissions"],
-      closedMissions: this.$store.getters["missions/getClosedMissions"],
-    };
+  computed: {
+    assignedMissions() {
+      return this.$store.getters["missions/getAssignedMissions"];
+    },
+    openedMissions() {
+      return this.$store.getters["missions/getOpenedMissions"];
+    },
+    closedMissions() {
+      return this.$store.getters["missions/getClosedMissions"];
+    },
   },
 };
 </script>

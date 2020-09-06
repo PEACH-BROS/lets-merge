@@ -40,12 +40,14 @@ export default {
     },
     ASSIGN_MISSION(state, missionId) {
       const targetMissionIndex = state.openedMissions.findIndex(mission => mission.id === missionId);
-      const targetMission = state.openedMissions.splice(targetMissionIndex, 1);
+      const targetMission = state.openedMissions.splice(targetMissionIndex, 1)[0];
+      targetMission.status = MISSION_STATUS.ASSIGNED;
       state.assignedMissions.push(targetMission);
     },
     CANCEL_MISSION(state, missionId) {
       const targetMissionIndex = state.assignedMissions.findIndex(mission => mission.id === missionId);
-      const targetMission = state.assignedMissions.splice(targetMissionIndex, 1);
+      const targetMission = state.assignedMissions.splice(targetMissionIndex, 1)[0];
+      targetMission.status = MISSION_STATUS.ASSIGNABLE;
       state.openedMissions.push(targetMission);
     },
   },

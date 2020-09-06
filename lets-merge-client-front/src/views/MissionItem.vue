@@ -8,25 +8,25 @@
     </span>
     <div class="mission-item">
       <v-btn
-        v-if="mission.status === '신청완료'"
+        v-show="mission.status === '신청완료'"
         depressed
-        color="#82b3c9"
+        color="#ef9a9a"
         @click="cancel"
       >
         신청취소
       </v-btn>
       <v-btn
-        v-else-if="mission.status === '신청가능'"
+        v-show="mission.status === '신청가능'"
         depressed
-        color="#b3e5fc"
+        color="#90caf9"
         @click="assign"
       >
         신청하기
       </v-btn>
-      <v-btn v-else-if="mission.status === '정원초과'" depressed disabled>
+      <v-btn v-show="mission.status === '정원초과'" depressed disabled>
         정원초과
       </v-btn>
-      <v-btn v-else-if="mission.status === '모집마감'" depressed disabled>
+      <v-btn v-show="mission.status === '모집마감'" depressed disabled>
         모집마감
       </v-btn>
     </div>
