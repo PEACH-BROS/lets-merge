@@ -15,6 +15,10 @@ public class Users {
         this.users = users;
     }
 
+    public static Users of(List<User> users) {
+        return new Users(users);
+    }
+
     public boolean contains(User target) {
         return users.contains(target);
     }

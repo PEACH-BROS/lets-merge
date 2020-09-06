@@ -1,12 +1,14 @@
 package com.peachbros.letsmerge.mission.model.domain;
 
 import com.peachbros.letsmerge.mission.model.domain.assign.AssignInfo;
+import com.peachbros.letsmerge.user.model.domain.User;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Entity
 public class Mission {
@@ -100,5 +102,9 @@ public class Mission {
                 .filter(AssignInfo::isAssigned)
                 .findFirst();
         return assigned.isPresent();
+    }
+
+    public List<User> getAssignedUsers() {
+        return assignedUsers.stream().map(AssignInfo::getUser).collect(Collectors.toList());
     }
 }
