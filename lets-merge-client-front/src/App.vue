@@ -2,6 +2,9 @@
   <v-app class="app">
     <AppBar />
     <router-view class="router-view" />
+    <v-snackbar top timeout="1300" class="snackbar mt-16" v-model="snackbarVisible">
+      {{ snackbarMessage }}
+    </v-snackbar>
   </v-app>
 </template>
 
@@ -12,6 +15,24 @@ export default {
   name: "App",
   components: {
     AppBar,
+  },
+  computed: {
+    snackbarMessage: {
+      get() {
+        return this.$store.getters["snackbar/message"];
+      },
+      set() {
+        this.$store.commit("snackbar/HIDE");
+      },
+    },
+    snackbarVisible: {
+      get() {
+        return this.$store.getters["snackbar/visible"];
+      },
+      set() {
+        this.$store.commit("snackbar/HIDE");
+      },
+    },
   },
 };
 </script>
@@ -24,5 +45,9 @@ export default {
 
 .router-view {
   margin: 10%;
+}
+
+.snackbar {
+  z-index: 10000 !important;
 }
 </style>

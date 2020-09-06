@@ -48,10 +48,13 @@ export default {
     async assign() {
       await api.assignMission(this.mission.id);
       this.$store.commit("missions/ASSIGN_MISSION", this.mission.id);
+      this.$store.commit("snackbar/SHOW", this.mission.name + "을 신청했습니다.");
     },
     async cancel() {
       await api.cancelMission(this.mission.id);
       this.$store.commit("missions/CANCEL_MISSION", this.mission.id);
+      this.$store.commit("snackbar/SHOW", this.mission.name + " 신청을 취소했습니다.");
+
     },
   },
 };
