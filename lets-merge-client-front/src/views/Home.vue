@@ -38,7 +38,7 @@ export default {
   components: {
     MissionItem,
   },
-  async mounted() {
+  async created() {
     await this.$store.dispatch("missions/setMissions");
   },
   computed: {
