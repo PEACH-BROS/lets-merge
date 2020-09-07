@@ -63,7 +63,6 @@ public class UserMissionService {
         return MissionsResponse.of(everyMission);
     }
 
-    @Transactional(readOnly = true)
     public MissionsWithStatusResponse getMissions(Long userId) {
         List<Mission> missions = missionRepository.findAllWithAssignInfo();
 
