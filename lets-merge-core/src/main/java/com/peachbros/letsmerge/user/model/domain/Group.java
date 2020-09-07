@@ -9,6 +9,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Entity
+@Table(name = "GroupResult")
 public class Group {
 
     @Id
@@ -25,11 +26,6 @@ public class Group {
     protected Group() {
     }
 
-    public Group(List<UserGroup> users, Mission mission) {
-        this.users = users;
-        this.mission = mission;
-    }
-
     public Group(List<User> users) {
         this.users = users.stream()
                 .map(user -> new UserGroup(user, this))
@@ -42,8 +38,7 @@ public class Group {
     }
 
     public boolean hasUser(Long userId) {
-        //TODO: User.isSameUserWith로 변경하기
-        Optional<UserGroup> first = users.stream().filter(user -> user.getUser().getId().equals(userId)).findFirst();
+        Optional<UserGroup> first = users.stream().filter(user -> user.isSameUserWith(userId)).findFirst();
         return first.isPresent();
     }
 

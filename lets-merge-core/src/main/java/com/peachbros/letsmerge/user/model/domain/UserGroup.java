@@ -24,6 +24,10 @@ public class UserGroup {
         this.group = group;
     }
 
+    public boolean isSameUserWith(Long userId) {
+        return this.user.isSameUserWith(userId);
+    }
+
     public User getUser() {
         return user;
     }
