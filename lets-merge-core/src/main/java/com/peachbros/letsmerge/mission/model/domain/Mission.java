@@ -6,6 +6,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Entity
 public class Mission {
@@ -55,6 +56,12 @@ public class Mission {
         }
     }
 
+    public MissionStatus findMissionStatus(Long userId) {
+        boolean isOpened = LocalDateTime.now().isBefore(this.dueDateTime);
+        boolean isAssigned = isAssigned(userId);
+        return MissionStatus.of(isOpened, isAssigned);
+    }
+
     public void addAssignInfo(AssignInfo assignInfo) {
         this.assignedUsers.add(assignInfo);
     }
@@ -85,5 +92,13 @@ public class Mission {
 
     public LocalDateTime getDueDateTime() {
         return dueDateTime;
+    }
+
+    private boolean isAssigned(Long userId) {
+        Optional<AssignInfo> assigned = this.assignedUsers.stream()
+                .filter(assignInfo -> assignInfo.getUser().isSameUserWith(userId))
+                .filter(AssignInfo::isAssigned)
+                .findFirst();
+        return assigned.isPresent();
     }
 }

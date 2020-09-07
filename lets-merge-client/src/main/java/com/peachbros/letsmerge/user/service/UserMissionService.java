@@ -2,15 +2,19 @@ package com.peachbros.letsmerge.user.service;
 
 import com.peachbros.letsmerge.common.exception.NoSuchValueException;
 import com.peachbros.letsmerge.mission.model.domain.Mission;
+import com.peachbros.letsmerge.mission.model.domain.MissionStatus;
 import com.peachbros.letsmerge.mission.model.domain.assign.AssignInfo;
 import com.peachbros.letsmerge.mission.model.repository.AssignInfoRepository;
 import com.peachbros.letsmerge.mission.model.repository.MissionRepository;
+import com.peachbros.letsmerge.mission.model.service.dto.MissionWithStatusResponse;
 import com.peachbros.letsmerge.mission.model.service.dto.MissionsResponse;
+import com.peachbros.letsmerge.mission.model.service.dto.MissionsWithStatusResponse;
 import com.peachbros.letsmerge.user.model.domain.User;
 import com.peachbros.letsmerge.user.model.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -59,9 +63,16 @@ public class UserMissionService {
         return MissionsResponse.of(everyMission);
     }
 
-    public MissionsResponse getMissions() {
-        List<Mission> missions = missionRepository.findAll();
-        return MissionsResponse.of(missions);
+    public MissionsWithStatusResponse getMissions(Long userId) {
+        List<Mission> missions = missionRepository.findAllWithAssignInfo();
+
+        List<MissionWithStatusResponse> responses = new ArrayList<>();
+
+        for (Mission mission : missions) {
+            MissionStatus missionStatus = mission.findMissionStatus(userId);
+            responses.add(new MissionWithStatusResponse(mission, missionStatus));
+        }
+        return MissionsWithStatusResponse.of(responses);
     }
 
     private User findUserById(Long userId) {

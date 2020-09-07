@@ -16,14 +16,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http
+        http.cors().and()
                 .csrf().disable()
                 .headers().frameOptions().disable()
                 .and()
                     .authorizeRequests()
                     .antMatchers("/", "/css/**", "/images/**", "/js/**", "/h2-console/**").permitAll()
                     .antMatchers("/admin/**").hasRole(Role.ADMIN.name())
-                    .anyRequest().authenticated()
+//                    .anyRequest().authenticated() //얘가 모든 사이트를 막고 있어서 잠시 주석 처리할게요.
                 .and()
                     .oauth2Login()
                     .defaultSuccessUrl("/")
