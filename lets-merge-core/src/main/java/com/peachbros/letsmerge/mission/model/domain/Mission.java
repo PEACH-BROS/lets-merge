@@ -1,6 +1,7 @@
 package com.peachbros.letsmerge.mission.model.domain;
 
 import com.peachbros.letsmerge.mission.model.domain.assign.AssignInfo;
+import com.peachbros.letsmerge.user.model.domain.Group;
 import com.peachbros.letsmerge.user.model.domain.User;
 
 import javax.persistence.*;
@@ -26,7 +27,10 @@ public class Mission {
     private LocalDateTime dueDateTime;
 
     @OneToMany(mappedBy = "mission", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<AssignInfo> assignedUsers = new ArrayList<>();
+    private final List<AssignInfo> assignedUsers = new ArrayList<>();
+
+    @OneToMany(mappedBy = "mission", cascade = CascadeType.ALL, orphanRemoval = true)
+    private final List<Group> matchResult = new ArrayList<>();
 
     protected Mission() {
     }
