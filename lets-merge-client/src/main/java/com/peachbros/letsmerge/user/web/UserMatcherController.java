@@ -16,7 +16,7 @@ public class UserMatcherController {
     }
 
     //미션 match 결과 요청
-    @GetMapping("/api/v1/users/{userId}/missions/{missionId}/result")
+    @GetMapping("/api/v1/users/{userId}/missions/{missionId}/match-result")
     public StandardResponse<GroupResponse> getMatchResult(@PathVariable("userId") Long userId, @PathVariable("missionId") Long missionId) {
         GroupResponse groupResponse = userMatcherService.showMatchResult(userId, missionId);
 
