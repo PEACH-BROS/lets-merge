@@ -46,11 +46,19 @@ export default {
   },
   methods: {
     async assign() {
+      if (this.mission.status !== '신청가능') {
+        this.$store.commit("snackbar/SHOW", "이미 신청한 미션입니다.");
+        return;
+      }
       await api.assignMission(this.mission.id);
       this.$store.commit("missions/ASSIGN_MISSION", this.mission.id);
       this.$store.commit("snackbar/SHOW", this.mission.name + "을 신청했습니다.");
     },
     async cancel() {
+      if (this.mission.status !== '신청완료') {
+        this.$store.commit("snackbar/SHOW", "해당 미션의 신청 내역이 없습니다.");
+        return;
+      }
       await api.cancelMission(this.mission.id);
       this.$store.commit("missions/CANCEL_MISSION", this.mission.id);
       this.$store.commit("snackbar/SHOW", this.mission.name + " 신청을 취소했습니다.");
