@@ -1,10 +1,10 @@
 package com.peachbros.letsmerge.user.service;
 
 import com.peachbros.letsmerge.common.exception.NoSuchValueException;
+import com.peachbros.letsmerge.matcher.model.domain.Matcher;
+import com.peachbros.letsmerge.matcher.model.domain.strategy.MatchStrategy;
 import com.peachbros.letsmerge.mission.model.domain.Mission;
 import com.peachbros.letsmerge.mission.model.repository.MissionRepository;
-import com.peachbros.letsmerge.model.domain.model.domain.Matcher;
-import com.peachbros.letsmerge.model.domain.model.domain.strategy.MatchStrategy;
 import com.peachbros.letsmerge.user.model.domain.Group;
 import com.peachbros.letsmerge.user.model.domain.Groups;
 import com.peachbros.letsmerge.user.model.domain.Users;
