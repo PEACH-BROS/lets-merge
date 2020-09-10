@@ -30,7 +30,7 @@ public class Mission {
     private final List<AssignInfo> assignedUsers = new ArrayList<>();
 
     @OneToMany(mappedBy = "mission", cascade = CascadeType.ALL, orphanRemoval = true)
-    private final List<Group> matchResult = new ArrayList<>();
+    private final List<Group> matchedGroups = new ArrayList<>();
 
     protected Mission() {
     }
@@ -100,15 +100,19 @@ public class Mission {
         return dueDateTime;
     }
 
+    public List<User> getAssignedUsers() {
+        return assignedUsers.stream().map(AssignInfo::getUser).collect(Collectors.toList());
+    }
+
+    public List<Group> getMatchedGroups() {
+        return matchedGroups;
+    }
+
     private boolean isAssigned(Long userId) {
         Optional<AssignInfo> assigned = this.assignedUsers.stream()
                 .filter(assignInfo -> assignInfo.getUser().isSameUserWith(userId))
                 .filter(AssignInfo::isAssigned)
                 .findFirst();
         return assigned.isPresent();
-    }
-
-    public List<User> getAssignedUsers() {
-        return assignedUsers.stream().map(AssignInfo::getUser).collect(Collectors.toList());
     }
 }

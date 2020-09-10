@@ -45,4 +45,10 @@ public class Group {
     public int size() {
         return users.size();
     }
+
+    public List<User> getUsers() {
+        return users.stream()
+                .map(UserGroup::getUser)
+                .collect(Collectors.toList());
+    }
 }
