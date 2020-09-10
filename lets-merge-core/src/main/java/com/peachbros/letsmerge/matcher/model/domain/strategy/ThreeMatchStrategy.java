@@ -1,14 +1,14 @@
 package com.peachbros.letsmerge.matcher.model.domain.strategy;
 
-import com.peachbros.letsmerge.user.model.domain.Group;
-import com.peachbros.letsmerge.user.model.domain.Groups;
-import com.peachbros.letsmerge.user.model.domain.Users;
+import com.peachbros.letsmerge.user.model.domain.*;
+import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+@Component
 public class ThreeMatchStrategy implements MatchStrategy {
     private static final int DEFAULT_GROUP_SIZE = 3;
 

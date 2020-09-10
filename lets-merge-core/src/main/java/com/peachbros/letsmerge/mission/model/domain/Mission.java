@@ -1,12 +1,16 @@
 package com.peachbros.letsmerge.mission.model.domain;
 
 import com.peachbros.letsmerge.mission.model.domain.assign.AssignInfo;
+import com.peachbros.letsmerge.user.model.domain.Group;
+import com.peachbros.letsmerge.user.model.domain.Groups;
+import com.peachbros.letsmerge.user.model.domain.User;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Entity
 public class Mission {
@@ -24,7 +28,10 @@ public class Mission {
     private LocalDateTime dueDateTime;
 
     @OneToMany(mappedBy = "mission", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<AssignInfo> assignedUsers = new ArrayList<>();
+    private final List<AssignInfo> assignedUsers = new ArrayList<>();
+
+    @OneToMany(mappedBy = "mission", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Group> matchedGroups = new ArrayList<>();
 
     protected Mission() {
     }
@@ -78,6 +85,13 @@ public class Mission {
         return !isActive(now);
     }
 
+    public void addMatchedGroups(Groups matchedGroups) {
+        if (this.matchedGroups.isEmpty()) {
+            this.matchedGroups = matchedGroups.getGroups();
+            matchedGroups.getGroups().forEach(group -> group.addMission(this));
+        }
+    }
+
     public Long getId() {
         return id;
     }
@@ -92,6 +106,14 @@ public class Mission {
 
     public LocalDateTime getDueDateTime() {
         return dueDateTime;
+    }
+
+    public List<User> getAssignedUsers() {
+        return assignedUsers.stream().map(AssignInfo::getUser).collect(Collectors.toList());
+    }
+
+    public List<Group> getMatchedGroups() {
+        return matchedGroups;
     }
 
     private boolean isAssigned(Long userId) {
