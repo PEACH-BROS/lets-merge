@@ -2,6 +2,7 @@ package com.peachbros.letsmerge.mission.model.domain;
 
 import com.peachbros.letsmerge.mission.model.domain.assign.AssignInfo;
 import com.peachbros.letsmerge.user.model.domain.Group;
+import com.peachbros.letsmerge.user.model.domain.Groups;
 import com.peachbros.letsmerge.user.model.domain.User;
 
 import javax.persistence.*;
@@ -30,7 +31,7 @@ public class Mission {
     private final List<AssignInfo> assignedUsers = new ArrayList<>();
 
     @OneToMany(mappedBy = "mission", cascade = CascadeType.ALL, orphanRemoval = true)
-    private final List<Group> matchedGroups = new ArrayList<>();
+    private List<Group> matchedGroups = new ArrayList<>();
 
     protected Mission() {
     }
@@ -82,6 +83,13 @@ public class Mission {
 
     public boolean isNotActive(LocalDateTime now) {
         return !isActive(now);
+    }
+
+    public void addMatchedGroups(Groups matchedGroups) {
+        if (this.matchedGroups.isEmpty()) {
+            this.matchedGroups = matchedGroups.getGroups();
+            matchedGroups.getGroups().forEach(group -> group.addMission(this));
+        }
     }
 
     public Long getId() {

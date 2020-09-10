@@ -32,9 +32,13 @@ public class Group {
                 .collect(Collectors.toList());
     }
 
-    public void add(User user) {
+    public void addUser(User user) {
         this.users = new ArrayList<>(users);
         this.users.add(new UserGroup(user, this));
+    }
+
+    public void addMission(Mission mission) {
+        this.mission = mission;
     }
 
     public boolean hasUser(Long userId) {

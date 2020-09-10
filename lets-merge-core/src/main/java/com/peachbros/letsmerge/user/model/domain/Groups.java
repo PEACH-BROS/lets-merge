@@ -18,7 +18,7 @@ public class Groups {
 
     public void addUserInFirstGroup(User user) {
         Group firstGroup = groups.get(0);
-        firstGroup.add(user);
+        firstGroup.addUser(user);
     }
 
     public Group findGroupContainingUser(Long userId) {

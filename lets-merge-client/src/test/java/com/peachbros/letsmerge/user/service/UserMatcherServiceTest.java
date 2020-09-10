@@ -1,14 +1,19 @@
-package com.peachbros.letsmerge.matcher.model.service;
+package com.peachbros.letsmerge.user.service;
 
-import com.peachbros.letsmerge.matcher.model.service.dto.GroupsResponse;
+import com.peachbros.letsmerge.matcher.model.domain.Matcher;
+import com.peachbros.letsmerge.matcher.model.domain.strategy.MatchStrategy;
 import com.peachbros.letsmerge.mission.model.domain.Mission;
 import com.peachbros.letsmerge.mission.model.domain.assign.AssignInfo;
 import com.peachbros.letsmerge.mission.model.repository.AssignInfoRepository;
 import com.peachbros.letsmerge.mission.model.repository.MissionRepository;
+import com.peachbros.letsmerge.user.model.domain.Groups;
 import com.peachbros.letsmerge.user.model.domain.Role;
 import com.peachbros.letsmerge.user.model.domain.User;
+import com.peachbros.letsmerge.user.model.domain.Users;
 import com.peachbros.letsmerge.user.model.repository.GroupRepository;
 import com.peachbros.letsmerge.user.model.repository.UserRepository;
+import com.peachbros.letsmerge.user.service.dto.GroupResponse;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,21 +27,25 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
-class AdminMatcherServiceTest {
+class UserMatcherServiceTest {
 
     @Autowired
-    private AdminMatcherService adminMatcherService;
+    private UserMatcherService userMatcherService;
     @Autowired
     private MissionRepository missionRepository;
     @Autowired
     private UserRepository userRepository;
     @Autowired
     private AssignInfoRepository assignInfoRepository;
+    @Autowired
+    private MatchStrategy matchStrategy;
+    @Autowired
+    private GroupRepository groupRepository;
 
     @Transactional
-    @DisplayName("user들을 매칭한다.")
+    @DisplayName("특정 사용자가 속한 group을 반환한다.")
     @Test
-    void match() {
+    void showMatchResult() {
         //given
         Mission mission = new Mission("체스 미션", LocalDateTime.of(2020, 5, 24, 0, 0, 0),
                 LocalDateTime.of(2020, 5, 25, 0, 0, 0));
@@ -73,9 +82,21 @@ class AdminMatcherServiceTest {
         List<User> assignedUsers = Arrays.asList(user1, user2, user3, user4, user5, user6, user7, user8);
         userRepository.saveAll(assignedUsers);
 
-        GroupsResponse matchedGroups = adminMatcherService.match(mission.getId());
+        Groups matchedGroups = Matcher.match(new Users(assignedUsers), matchStrategy);
+        mission.addMatchedGroups(matchedGroups);
+        groupRepository.saveAll(matchedGroups.getGroups());
 
-        assertThat(matchedGroups.getGroupsResponse()).hasSize(3);
+        //when
+        GroupResponse groupResponse = userMatcherService.showMatchResult(user1.getId(), mission.getId());
 
+        //then
+        assertThat(groupResponse.getGroup().hasUser(user1.getId()));
+    }
+
+    @AfterEach
+    void tearDown() {
+        assignInfoRepository.deleteAll();
+        missionRepository.deleteAll();
+        userRepository.deleteAll();
     }
 }

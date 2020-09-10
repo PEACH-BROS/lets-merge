@@ -38,7 +38,8 @@ public class AdminMatcherService {
         Users users = new Users(mission.getAssignedUsers());
 
         Groups matchedGroups = Matcher.match(users, matchStrategy);
-        matchedGroups.getGroups().forEach(group -> groupRepository.save(group));
+        mission.addMatchedGroups(matchedGroups);
+        groupRepository.saveAll(matchedGroups.getGroups());
         //TODO: 여기서 자동으로 userGroupRepository.save가 되나?
 
         return new GroupsResponse(matchedGroups);
